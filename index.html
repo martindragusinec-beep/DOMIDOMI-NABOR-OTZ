@@ -184,6 +184,15 @@
     background-repeat: no-repeat;
     filter: saturate(.9) contrast(1.04);
   }
+  @supports (background-image: image-set(url('x') 1x)) {
+    .hero-photo {
+      background-image: image-set(
+        url('media/hero-bg.avif') type('image/avif'),
+        url('media/hero-bg.webp') type('image/webp'),
+        url('hero-bg.png') type('image/png')
+      );
+    }
+  }
   .hero-tint {
     position: absolute; inset: 0;
     background:
@@ -540,9 +549,9 @@
         <!-- trust box -->
         <div class="mt-6 inline-flex items-center gap-4 rounded-2xl bg-white/[.08] backdrop-blur border border-white/10 pl-2 pr-5 py-2 reveal" style="--i:3">
           <div class="flex -space-x-2">
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="jan-kaiser.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="justin-funck.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="josef-dreser.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/justin-funck.avif" type="image/avif"/><source srcset="media/justin-funck.webp" type="image/webp"/><img src="media/justin-funck.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/josef-dreser.avif" type="image/avif"/><source srcset="media/josef-dreser.webp" type="image/webp"/><img src="media/josef-dreser.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
             <span class="w-8 h-8 rounded-full bg-lime2-400 text-ink-900 text-[10px] font-bold grid place-items-center ring-2 ring-ink-900">+100</span>
           </div>
           <div class="text-[13px] leading-tight">
@@ -848,7 +857,7 @@
           <div class="absolute inset-8 rounded-full border border-dashed border-white/10"></div>
           <!-- center: dům v kruhu -->
           <div class="absolute inset-[18%] rounded-full overflow-hidden border border-white/10 shadow-[0_12px_48px_-12px_rgba(0,0,0,.45)]">
-            <img src="ekosystem-dum.png" alt="Rodinný dům s fotovoltaikou a tepelným čerpadlem" width="800" height="800" loading="lazy" decoding="async" class="w-full h-full object-cover object-center" />
+            <picture class="w-full h-full block"><source srcset="media/ekosystem-dum.avif" type="image/avif"/><source srcset="media/ekosystem-dum.webp" type="image/webp"/><img src="media/ekosystem-dum.webp" alt="Rodinný dům s fotovoltaikou a tepelným čerpadlem" width="800" height="800" loading="lazy" decoding="async" class="w-full h-full object-cover object-center" /></picture>
           </div>
           <!-- ecosystem items positioned around -->
           <!-- top -->
@@ -908,7 +917,7 @@
       <article class="group reveal" style="--i:1">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="jan-kaiser.jpg" alt="Jan Kaiser" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <picture class="absolute inset-0 w-full h-full"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="Jan Kaiser" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
             <div class="font-hand text-2xl text-sun-300">„Za 2 roky jsem na 120k.“</div>
@@ -929,7 +938,7 @@
       <article class="group reveal md:translate-y-8" style="--i:2">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="justin-funck.jpg" alt="Justin Funck" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <picture class="absolute inset-0 w-full h-full"><source srcset="media/justin-funck.avif" type="image/avif"/><source srcset="media/justin-funck.webp" type="image/webp"/><img src="media/justin-funck.webp" alt="Justin Funck" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
             <div class="font-hand text-2xl text-sun-300">„Nevěřil, že to půjde takhle rychle.“</div>
@@ -950,7 +959,7 @@
       <article class="group reveal" style="--i:3">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="josef-dreser.jpg" alt="Josef Drešer" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <picture class="absolute inset-0 w-full h-full"><source srcset="media/josef-dreser.avif" type="image/avif"/><source srcset="media/josef-dreser.webp" type="image/webp"/><img src="media/josef-dreser.webp" alt="Josef Drešer" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
             <div class="font-hand text-2xl text-sun-300">„Lidi a kultura — to je náš základ.“</div>
@@ -1314,7 +1323,7 @@
             <svg width="28" height="20" viewBox="0 0 28 20" fill="none" class="text-brand"><path d="M10 0 C 4 2, 0 8, 0 16 V20 H10 V10 H5 C6 6, 8 3, 11 2zM24 0 C 18 2, 14 8, 14 16 V20 H24 V10 H19 C20 6, 22 3, 25 2z" fill="currentColor"/></svg>
             <p class="mt-4 text-[15px] text-slate2-900 leading-relaxed">Za 2 roky jsem se dostal na <span class="font-bold">120 000 Kč měsíčně</span>. Férový systém a skvělý tým.</p>
             <div class="mt-6 flex items-center gap-3">
-              <img src="jan-kaiser.jpg" alt="Jan Kaiser" width="40" height="40" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" decoding="async"/>
+              <picture class="contents shrink-0"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="Jan Kaiser" width="40" height="40" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" decoding="async"/></picture>
               <div class="text-[13px]">
                 <div class="font-bold">Jan Kaiser</div>
                 <div class="text-slate2-500">B2B obchodník · 2 roky</div>
