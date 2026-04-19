@@ -50,6 +50,9 @@
   .reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: none; }
   .stagger > * { transition-delay: calc(var(--i, 0) * 70ms); }
+  @media (max-width: 767px) { .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } }
+  html { scroll-behavior: smooth; }
+  .eco-card { z-index: 1; }
 
   /* ---- scan scene ---- */
   .scan-paper { transform: rotate(-2deg); }
@@ -264,7 +267,7 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scroll-padding-left: 16px;
-      padding: 4px 16px 20px;
+      padding: 4px 16px 6px;
       margin: 0 -16px;
       scrollbar-width: none;
     }
@@ -476,8 +479,10 @@
   /* misc */
   .tabular { font-variant-numeric: tabular-nums; }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-<body class="antialiased">
+<body class="antialiased" data-make-webhook="">
+<!-- Náborový formulář: vlož do data-make-webhook URL z Make.com (modul Webhooks > Custom webhook), např. data-make-webhook="https://hook.eu2.make.com/..." -->
 <!-- Top scroll progress -->
 <div id="scroll-progress" class="fixed top-0 left-0 z-[60] w-full h-[3px] bg-transparent">
   <div class="progressbar w-full" style="transform: scaleX(0)"></div>
@@ -523,7 +528,6 @@
       <div class="lg:col-span-7">
         <div class="flex items-center gap-3 mb-6 reveal">
           <span class="chip bg-white/10 backdrop-blur text-white/90"><span class="dot bg-lime2-400"></span> Nábor otevřen · ČR</span>
-          <span class="chip bg-white/5 backdrop-blur text-white/70 border border-white/10">Tým 100+ lidí</span>
         </div>
         <h1 class="h-tight text-[34px] sm:text-[42px] lg:text-[54px] font-extrabold reveal" style="--i:1">
           Získej svobodu, pasivní&nbsp;příjem
@@ -536,9 +540,9 @@
         <!-- trust box -->
         <div class="mt-6 inline-flex items-center gap-4 rounded-2xl bg-white/[.08] backdrop-blur border border-white/10 pl-2 pr-5 py-2 reveal" style="--i:3">
           <div class="flex -space-x-2">
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=120&amp;h=120&amp;q=80" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=120&amp;h=120&amp;q=80" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=120&amp;h=120&amp;q=80" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="jan-kaiser.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="justin-funck.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
+            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><img src="josef-dreser.jpg" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></span>
             <span class="w-8 h-8 rounded-full bg-lime2-400 text-ink-900 text-[10px] font-bold grid place-items-center ring-2 ring-ink-900">+100</span>
           </div>
           <div class="text-[13px] leading-tight">
@@ -552,10 +556,6 @@
             Chci se přidat k týmu
             <span class="grid place-items-center w-9 h-9 rounded-full bg-white/15"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
-          <a href="#vydelky" class="text-white/80 hover:text-white text-sm font-medium inline-flex items-center gap-2">
-            Podívat se na čísla
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
         </div>
 
         <!-- micro-trust line -->
@@ -724,7 +724,7 @@
                   <span class="w-1 h-1 rounded-full bg-lime2-400 animate-pulse"></span>
                   <span class="text-[8px] uppercase tracking-[.15em] text-white/50 font-mono">Roční úspora</span>
                 </div>
-                <div class="mt-1 font-extrabold tabular text-[22px] leading-none text-lime2-300" data-scan-counter data-target="42180">0 Kč</div>
+                <div class="mt-1 font-extrabold tabular text-[16px] sm:text-[22px] leading-none text-lime2-300" data-scan-counter data-target="42180">0 Kč</div>
                 <div class="mt-auto space-y-1.5">
                   <div class="flex justify-between text-[8px] font-mono text-white/50">
                     <span data-scan-label>FVE + TČ + tarif</span>
@@ -852,33 +852,33 @@
           </div>
           <!-- ecosystem items positioned around -->
           <!-- top -->
-          <div class="absolute left-1/2 -translate-x-1/2 -top-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 10h16M6 10v8h12v-8M8 14h2M14 14h2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+          <div class="eco-card absolute left-1/2 -translate-x-1/2 -top-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
+            <img src="Tepelná čerpadla.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Tepelná čerpadla</span>
           </div>
           <!-- top-right -->
-          <div class="absolute right-0 top-[20%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="1" stroke="#fff" stroke-width="1.6"/><path d="M3 9h18M3 13h18M9 4v14M15 4v14" stroke="#fff" stroke-width="1.2"/></svg></span>
+          <div class="eco-card absolute right-0 top-[20%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
+            <img src="Fotovoltaika.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Fotovoltaika</span>
           </div>
           <!-- right -->
-          <div class="absolute -right-2 bottom-[30%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="#fff" stroke-width="1.6"/><path d="M12 8v4l3 2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+          <div class="eco-card absolute -right-2 bottom-[30%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
+            <img src="Finance.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Finance</span>
           </div>
           <!-- bottom -->
-          <div class="absolute left-1/2 -translate-x-1/2 -bottom-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <span class="w-8 h-8 rounded-lg bg-lime2-400/15 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="#a3e635"/></svg></span>
+          <div class="eco-card absolute left-1/2 -translate-x-1/2 -bottom-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
+            <img src="Energie.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Energie</span>
           </div>
           <!-- bottom-left -->
-          <div class="absolute left-0 bottom-[26%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 10l9-7 9 7v10H3V10z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="#fff" stroke-width="1.6"/></svg></span>
+          <div class="eco-card absolute left-0 bottom-[26%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
+            <img src="Stavby.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Stavby</span>
           </div>
           <!-- top-left -->
-          <div class="absolute left-[6%] top-[18%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <span class="w-8 h-8 rounded-lg bg-brand/15 grid place-items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M10 3h4v4l5 5-7 10-7-10 5-5V3z" stroke="#E30A1A" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+          <div class="eco-card absolute left-[6%] top-[18%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
+            <img src="Servis.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
             <span class="font-semibold text-sm">Servis</span>
           </div>
 
@@ -895,12 +895,11 @@
 <!-- PŘÍBĚHY -->
 <section id="pribehy" class="relative overflow-hidden bg-paper">
   <div class="relative max-w-[1360px] mx-auto px-4 lg:px-16 py-24 md:py-32">
-    <div class="flex items-end justify-between gap-8 reveal">
+    <div class="reveal">
       <div>
         <div class="eyebrow text-slate2-500 mb-4">· Lidé, ne čísla</div>
         <h2 class="h-tight text-[40px] md:text-[56px] font-extrabold text-slate2-900">Reální kolegové.<br/>Reálné příběhy.</h2>
       </div>
-      <p class="hidden md:block max-w-[380px] text-slate2-600 leading-relaxed">Žádné stockové úsměvy. Lidi z terénu, kteří u nás dělají denně a rádi si o své práci povídají.</p>
     </div>
 
     <div class="mt-12 stories-wrap">
@@ -909,18 +908,18 @@
       <article class="group reveal" style="--i:1">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Obchodní zástupce v terénu" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <img src="jan-kaiser.jpg" alt="Jan Kaiser" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„Přestal jsem počítat hodiny.“</div>
+            <div class="font-hand text-2xl text-sun-300">„Za 2 roky jsem na 120k.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
-                <div class="font-bold">Tomáš, 34</div>
-                <div class="text-[12px] text-white/70">OZ · Brno · 3. rok</div>
+                <div class="font-bold">Jan Kaiser</div>
+                <div class="text-[12px] text-white/70">B2B obchodník · 2 roky</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Po 18 měs.</div>
-                <div class="tabular font-extrabold text-lime2-300">128k / měs</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Po 2 letech</div>
+                <div class="tabular font-extrabold text-lime2-300">120k / měs</div>
               </div>
             </div>
           </div>
@@ -930,18 +929,18 @@
       <article class="group reveal md:translate-y-8" style="--i:2">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1573496359142-bdb11f7b2cb7?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Obchodní zástupkyně" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <img src="justin-funck.jpg" alt="Justin Funck" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„První klient z doporučení.“</div>
+            <div class="font-hand text-2xl text-sun-300">„Nevěřil, že to půjde takhle rychle.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
-                <div class="font-bold">Lenka, 29</div>
-                <div class="text-[12px] text-white/70">OZ · Plzeň · 1. rok</div>
+                <div class="font-bold">Justin Funck</div>
+                <div class="text-[12px] text-white/70">OZ · Praha · 1. rok</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Za 6 měs.</div>
-                <div class="tabular font-extrabold text-lime2-300">92k / měs</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Po 1 roce</div>
+                <div class="tabular font-extrabold text-lime2-300">65k / měs</div>
               </div>
             </div>
           </div>
@@ -951,18 +950,18 @@
       <article class="group reveal" style="--i:3">
         <div class="relative rounded-3xl overflow-hidden shadow-card card-lift">
           <div class="relative aspect-[4/5] bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Obchodní zástupce" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
+            <img src="josef-dreser.jpg" alt="Josef Drešer" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„Konečně pasivní reziduál.“</div>
+            <div class="font-hand text-2xl text-sun-300">„Lidi a kultura — to je náš základ.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
-                <div class="font-bold">Martin, 41</div>
-                <div class="text-[12px] text-white/70">OZ · BA · 4. rok</div>
+                <div class="font-bold">Josef Drešer</div>
+                <div class="text-[12px] text-white/70">HR manažer</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Reziduál</div>
-                <div class="tabular font-extrabold text-lime2-300">34k / měs</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Tým v ČR</div>
+                <div class="tabular font-extrabold text-lime2-300">100+</div>
               </div>
             </div>
           </div>
@@ -978,8 +977,8 @@
 
     <!-- mini filmstrip -->
     <div class="mt-10 sm:mt-16 grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 opacity-90">
-      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=400&amp;h=400&amp;q=80" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
-      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200"><img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&amp;fit=crop&amp;w=400&amp;h=400&amp;q=80" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
+      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200"><img src="DJI_0224-1.jpg.webp" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
+      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200"><img src="MRT_7452-1-1.png.webp" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
       <div class="aspect-square rounded-xl bg-brand text-white grid place-items-center p-2 sm:p-3 text-center order-first sm:order-last">
         <div>
           <div class="text-[10px] sm:text-xs uppercase tracking-[.2em] opacity-80">Tým</div>
@@ -987,9 +986,9 @@
           <div class="text-[10px] opacity-80">lidí v ČR</div>
         </div>
       </div>
-      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="https://images.unsplash.com/photo-1497366210438-4c9a1d2f6e44?auto=format&amp;fit=crop&amp;w=400&amp;h=400&amp;q=80" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
-      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&amp;fit=crop&amp;w=400&amp;h=400&amp;q=80" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
-      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=400&amp;h=400&amp;q=80" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
+      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="DSC06818-1-1.png.webp" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
+      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="DJI_0554-1-2.png.webp" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
+      <div class="aspect-square rounded-xl overflow-hidden bg-slate-200 hidden sm:block"><img src="Cernincice-1-1.png.webp" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async"/></div>
     </div>
   </div>
 </section>
@@ -1060,119 +1059,33 @@
             <text x="225" y="148" font-family="Manrope" font-size="7" font-weight="800" fill="#C89A10" letter-spacing="3" opacity="0.75">SLOVENSKO</text>
 
             <!-- CZ pins - positioned roughly on CZ path (translated by +15,+8) -->
+            <!-- CZ center circle with branch count -->
             <g font-family="Manrope" font-weight="700" fill="#0f172a">
-              <!-- Praha (HQ) -->
-              <g>
-                <circle cx="60" cy="42" r="9" fill="#E30A1A" fill-opacity="0.18">
-                  <animate attributeName="r" values="7;12;7" dur="3s" repeatCount="indefinite"/>
-                  <animate attributeName="fill-opacity" values="0.25;0.04;0.25" dur="3s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="60" cy="42" r="4" fill="#E30A1A" stroke="#fff" stroke-width="1.8"/>
-                <text x="67" y="40" font-size="8">Praha</text>
-                <text x="67" y="48" font-size="5.5" font-weight="500" fill="#64748b">HQ · Central</text>
-              </g>
-              <!-- Liberec (NW-top) -->
-              <circle cx="70" cy="24" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="74" y="22" font-size="6.5" fill="#475569">Liberec</text>
-              <!-- Ústí n. L. -->
-              <circle cx="43" cy="22" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="18" y="20" font-size="6.5" fill="#475569">Ústí n.L.</text>
-              <!-- Karlovy Vary -->
-              <circle cx="22" cy="32" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="2" y="35" font-size="6" fill="#475569">K. Vary</text>
-              <!-- Plzeň -->
-              <circle cx="32" cy="50" r="3" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="12" y="54" font-size="6.5" fill="#475569">Plzeň</text>
-              <!-- České Budějovice -->
-              <circle cx="54" cy="72" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="22" y="78" font-size="6" fill="#475569">Č. Budějovice</text>
-              <!-- Hradec Králové -->
-              <circle cx="92" cy="38" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="97" y="36" font-size="6.5" fill="#475569">Hradec Kr.</text>
-              <!-- Pardubice -->
-              <circle cx="88" cy="47" r="2.5" fill="#E30A1A" stroke="#fff" stroke-width="1.4"/>
-              <text x="93" y="52" font-size="6" fill="#475569">Pardubice</text>
-              <!-- Jihlava -->
-              <circle cx="88" cy="63" r="2.5" fill="#E30A1A" stroke="#fff" stroke-width="1.4"/>
-              <text x="72" y="68" font-size="6" fill="#475569">Jihlava</text>
-              <!-- Brno -->
-              <g>
-                <circle cx="120" cy="68" r="7" fill="#E30A1A" fill-opacity="0.15">
-                  <animate attributeName="r" values="5.5;10;5.5" dur="3.2s" repeatCount="indefinite"/>
-                  <animate attributeName="fill-opacity" values="0.22;0.03;0.22" dur="3.2s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="120" cy="68" r="3.6" fill="#E30A1A" stroke="#fff" stroke-width="1.6"/>
-                <text x="126" y="66" font-size="8">Brno</text>
-              </g>
-              <!-- Olomouc -->
-              <circle cx="140" cy="55" r="2.8" fill="#E30A1A" stroke="#fff" stroke-width="1.5"/>
-              <text x="145" y="53" font-size="6.5" fill="#475569">Olomouc</text>
-              <!-- Zlín -->
-              <circle cx="152" cy="68" r="2.6" fill="#E30A1A" stroke="#fff" stroke-width="1.4"/>
-              <text x="157" y="72" font-size="6" fill="#475569">Zlín</text>
-              <!-- Ostrava -->
-              <g>
-                <circle cx="160" cy="45" r="7" fill="#E30A1A" fill-opacity="0.15">
-                  <animate attributeName="r" values="5.5;10;5.5" dur="2.8s" repeatCount="indefinite"/>
-                  <animate attributeName="fill-opacity" values="0.22;0.03;0.22" dur="2.8s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="160" cy="45" r="3.6" fill="#E30A1A" stroke="#fff" stroke-width="1.6"/>
-                <text x="166" y="43" font-size="8">Ostrava</text>
-              </g>
+              <circle cx="90" cy="65" r="22" fill="#E30A1A" fill-opacity="0.12">
+                <animate attributeName="r" values="20;28;20" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" values="0.2;0.05;0.2" dur="3s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="90" cy="65" r="15" fill="#E30A1A" stroke="#fff" stroke-width="2.2"/>
+              <text x="90" y="66" font-size="15" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="middle">9</text>
+              <text x="90" y="89" font-size="7" fill="#475569" text-anchor="middle" font-weight="700">poboček</text>
             </g>
 
-            <!-- SK pins -->
+            <!-- SK center circle with branch count -->
             <g font-family="Manrope" font-weight="700" fill="#0f172a">
-              <!-- Bratislava -->
-              <g>
-                <circle cx="177" cy="94" r="7" fill="#F4C21F" fill-opacity="0.25">
-                  <animate attributeName="r" values="5.5;10;5.5" dur="3.4s" repeatCount="indefinite"/>
-                  <animate attributeName="fill-opacity" values="0.35;0.05;0.35" dur="3.4s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="177" cy="94" r="3.6" fill="#F4C21F" stroke="#fff" stroke-width="1.6"/>
-                <text x="154" y="110" font-size="8">Bratislava</text>
-              </g>
-              <!-- Trnava -->
-              <circle cx="188" cy="92" r="2.5" fill="#F4C21F" stroke="#fff" stroke-width="1.4"/>
-              <text x="192" y="91" font-size="6" fill="#475569">Trnava</text>
-              <!-- Nitra -->
-              <circle cx="200" cy="100" r="2.6" fill="#F4C21F" stroke="#fff" stroke-width="1.4"/>
-              <text x="204" y="104" font-size="6" fill="#475569">Nitra</text>
-              <!-- Trenčín -->
-              <circle cx="200" cy="86" r="2.5" fill="#F4C21F" stroke="#fff" stroke-width="1.4"/>
-              <text x="204" y="85" font-size="6" fill="#475569">Trenčín</text>
-              <!-- Žilina -->
-              <circle cx="220" cy="78" r="3" fill="#F4C21F" stroke="#fff" stroke-width="1.5"/>
-              <text x="224" y="77" font-size="6.5" fill="#475569">Žilina</text>
-              <!-- Banská Bystrica -->
-              <circle cx="235" cy="96" r="2.8" fill="#F4C21F" stroke="#fff" stroke-width="1.5"/>
-              <text x="208" y="118" font-size="6.5" fill="#475569">B. Bystrica</text>
-              <!-- Poprad -->
-              <circle cx="255" cy="82" r="2.5" fill="#F4C21F" stroke="#fff" stroke-width="1.4"/>
-              <text x="259" y="81" font-size="6" fill="#475569">Poprad</text>
-              <!-- Prešov -->
-              <circle cx="278" cy="85" r="2.8" fill="#F4C21F" stroke="#fff" stroke-width="1.5"/>
-              <text x="282" y="84" font-size="6.5" fill="#475569">Prešov</text>
-              <!-- Košice -->
-              <g>
-                <circle cx="282" cy="95" r="7" fill="#F4C21F" fill-opacity="0.25">
-                  <animate attributeName="r" values="5.5;10;5.5" dur="3.1s" repeatCount="indefinite"/>
-                  <animate attributeName="fill-opacity" values="0.35;0.05;0.35" dur="3.1s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="282" cy="95" r="3.6" fill="#F4C21F" stroke="#fff" stroke-width="1.6"/>
-                <text x="288" y="100" font-size="8">Košice</text>
-              </g>
+              <circle cx="232" cy="90" r="22" fill="#F4C21F" fill-opacity="0.22">
+                <animate attributeName="r" values="20;28;20" dur="3.2s" repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" values="0.32;0.08;0.32" dur="3.2s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="232" cy="90" r="15" fill="#F4C21F" stroke="#fff" stroke-width="2.2"/>
+              <text x="232" y="91" font-size="15" font-weight="800" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">3</text>
+              <text x="232" y="114" font-size="7" fill="#475569" text-anchor="middle" font-weight="700">pobočky</text>
             </g>
 
             <!-- connector line CZ-SK -->
             <path d="M 120,68 C 140,80 160,90 177,94" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 3" fill="none" opacity="0.7"/>
           </svg</svg>
-          <div class="mt-2 flex items-center justify-between text-[11px] font-mono text-slate2-500">
+          <div class="mt-2 text-[11px] font-mono text-slate2-500">
             <span>mezinárodní skupina DOMIDOMI</span>
-            <span class="flex items-center gap-3">
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand"></span>ČR</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-lime2-500"></span>SR</span>
-            </span>
           </div>
         </div>
       </div>
@@ -1207,64 +1120,34 @@
                   </div>
                 </div>
                 <!-- photo 1 — rodinný dům s FVE -->
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">FVE 9,8 kWp</span>
-                  <div class="cap">
-                    <div><div class="meta">České Budějovice</div><div class="place">Rodina Novákova</div></div>
-                    <div class="meta">04/26</div>
-                  </div>
-                </div>
-                <!-- quote -->
-                <div class="dm-tile dm-w-md dm-quote">
-                  <div class="qmark">"</div>
-                  <p>V DOMIDOMI jsem si za&nbsp;rok vydělal víc než za&nbsp;tři roky v&nbsp;bance. A&nbsp;baví mě to.</p>
-                  <div class="who">
-                    <div class="av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80')"></div>
-                    <div><div class="nm">Tomáš H.</div><div class="rl">obchodník · Brno</div></div>
-                  </div>
-                </div>
-                <!-- year stat -->
-                <div class="dm-tile dm-w-sq dm-stat dm-ink">
-                  <div class="eye">/ 02 · na&nbsp;trhu</div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('Cernincice-1-1.png.webp')"></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('D3F4F321-A851-4F98-B09A-1F36064F47DA-768x576.jpg.webp')"></div>
+                <div class="dm-tile dm-w-sq dm-stat dm-amber">
+                  <div class="eye">/ 02 · rychlost</div>
                   <div>
-                    <div class="big tabular">15</div>
-                    <div class="lbl mt-1">let stavíme značku DOMIDOMI.</div>
+                    <div class="big tabular">30<span class="text-[24px] align-top">&nbsp;dní</span></div>
+                    <div class="lbl mt-1">průměrná doba instalace.</div>
                   </div>
                 </div>
-                <!-- photo 2 — technik na střeše -->
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1605980776566-0486c3ac7617?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">FVE 36 kWp</span>
-                  <div class="cap">
-                    <div><div class="meta">Plzeň</div><div class="place">Průmyslový objekt</div></div>
-                    <div class="meta">2026</div>
-                  </div>
-                </div>
-                <!-- earnings stat -->
-                <div class="dm-tile dm-w-md dm-stat dm-ink">
-                  <div class="eye">/ 03 · výdělek</div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0224-1.jpg.webp')"></div>
+                <div class="dm-tile dm-w-md dm-stat dm-lime">
+                  <div class="eye">/ 03 · leady</div>
                   <div>
-                    <div class="big tabular">118k</div>
-                    <div class="lbl mt-1">Kč měsíčně — průměrný výdělek obchodníka.</div>
+                    <div class="big tabular">100<span class="text-[32px] align-top">+</span></div>
+                    <div class="lbl mt-1">kvalitních leadů měsíčně.</div>
                   </div>
                 </div>
-                <!-- photo 3 — tým -->
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">Tým · Praha</span>
-                  <div class="cap">
-                    <div><div class="meta">HQ</div><div class="place">Morning stand-up</div></div>
-                    <div class="meta">09:00</div>
-                  </div>
-                </div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0554-1-2.png.webp')"></div>
               </div>
               <!-- SET A2 duplicate for seamless loop -->
               <div class="flex gap-[14px] shrink-0" aria-hidden="true">
-                <div class="dm-tile dm-w-lg dm-stat dm-red"><div class="eye text-white/70">/ 01 · realizace</div><div><div class="big tabular">23&nbsp;000<span class="text-[32px] align-top">+</span></div><div class="lbl mt-2">dokončených instalací FVE, tepelných čerpadel a&nbsp;baterií.</div></div></div>
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=80')"><span class="tag">FVE 9,8 kWp</span><div class="cap"><div><div class="meta">České Budějovice</div><div class="place">Rodina Novákova</div></div><div class="meta">04/26</div></div></div>
-                <div class="dm-tile dm-w-md dm-quote"><div class="qmark">"</div><p>V DOMIDOMI jsem si za&nbsp;rok vydělal víc než za&nbsp;tři roky v&nbsp;bance. A&nbsp;baví mě to.</p><div class="who"><div class="av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80')"></div><div><div class="nm">Tomáš H.</div><div class="rl">obchodník · Brno</div></div></div></div>
-                <div class="dm-tile dm-w-sq dm-stat dm-ink"><div class="eye">/ 02 · na&nbsp;trhu</div><div><div class="big tabular">15</div><div class="lbl mt-1">let stavíme značku DOMIDOMI.</div></div></div>
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1605980776566-0486c3ac7617?auto=format&fit=crop&w=900&q=80')"><span class="tag">FVE 36 kWp</span><div class="cap"><div><div class="meta">Plzeň</div><div class="place">Průmyslový objekt</div></div><div class="meta">2026</div></div></div>
-                <div class="dm-tile dm-w-md dm-stat dm-ink"><div class="eye">/ 03 · výdělek</div><div><div class="big tabular">118k</div><div class="lbl mt-1">Kč měsíčně — průměrný výdělek obchodníka.</div></div></div>
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80')"><span class="tag">Tým · Praha</span><div class="cap"><div><div class="meta">HQ</div><div class="place">Morning stand-up</div></div><div class="meta">09:00</div></div></div>
+                <div class="dm-tile dm-w-lg dm-stat dm-red"><div class="eye text-white/70">/ 01 · realizace</div><div><div class="big tabular">23&nbsp;000<span class="text-[32px] align-top">+</span></div><div class="lbl mt-2">dokončených instalací.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('Cernincice-1-1.png.webp')"></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('D3F4F321-A851-4F98-B09A-1F36064F47DA-768x576.jpg.webp')"></div>
+                <div class="dm-tile dm-w-sq dm-stat dm-amber"><div class="eye">/ 02 · rychlost</div><div><div class="big tabular">30<span class="text-[24px] align-top">&nbsp;dní</span></div><div class="lbl mt-1">průměrná doba instalace.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0224-1.jpg.webp')"></div>
+                <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 03 · leady</div><div><div class="big tabular">100<span class="text-[32px] align-top">+</span></div><div class="lbl mt-1">kvalitních leadů měsíčně.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0554-1-2.png.webp')"></div>
               </div>
             </div>
             <span class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-paper to-transparent z-[2]"></span>
@@ -1276,23 +1159,14 @@
             <div class="data-row data-row-b">
               <!-- SET B1 -->
               <div class="flex gap-[14px] shrink-0">
-                <!-- photo — tepelné čerpadlo -->
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1627906812210-d04d5c61d0b1?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">Tepelné čerpadlo</span>
-                  <div class="cap">
-                    <div><div class="meta">Olomouc</div><div class="place">Rodinný dům</div></div>
-                    <div class="meta">14 kW</div>
-                  </div>
-                </div>
-                <!-- leads stat -->
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DSC06818-1-1.png.webp')"></div>
                 <div class="dm-tile dm-w-md dm-stat dm-lime">
                   <div class="eye">/ 04 · leady</div>
                   <div>
                     <div class="big tabular">100<span class="text-[32px] align-top">+</span></div>
-                    <div class="lbl mt-1">kvalitních leadů měsíčně — každý obchodník dostává od&nbsp;nás.</div>
+                    <div class="lbl mt-1">kvalitních leadů měsíčně.</div>
                   </div>
                 </div>
-                <!-- gauge -->
                 <div class="dm-tile dm-w-md dm-gauge">
                   <div class="eye font-mono text-[10px] uppercase opacity-70 tracking-widest">/ 05 · konverze</div>
                   <div class="bar-row">
@@ -1310,56 +1184,24 @@
                     </div>
                   </div>
                 </div>
-                <!-- photo — instalace panelu -->
-                <div class="dm-tile dm-w-sq dm-photo" style="background-image:url('https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">8,4 kWp</span>
-                  <div class="cap">
-                    <div><div class="meta">Liberec</div><div class="place">p.&nbsp;Svoboda</div></div>
-                  </div>
-                </div>
-                <!-- big realiz tile -->
-                <div class="dm-tile dm-w-md dm-stat dm-paper">
-                  <div class="eye">/ 06 · instalovaný výkon</div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7763-1-1.jpg.webp')"></div>
+                <div class="dm-tile dm-w-md dm-stat dm-ink">
+                  <div class="eye">/ 06 · výdělek</div>
                   <div>
-                    <div class="big tabular">124 <span class="text-[24px]">MW</span></div>
-                    <div class="lbl mt-1">celkový výkon FVE, které pro&nbsp;klienty točí proud.</div>
+                    <div class="big tabular">118k</div>
+                    <div class="lbl mt-1">Kč měsíčně — průměrný výdělek.</div>
                   </div>
                 </div>
-                <!-- badge — pobočky -->
-                <div class="dm-tile dm-w-sq dm-badge">
-                  <div class="stamp">CZ<br>SK</div>
-                  <div>
-                    <h5>12 poboček</h5>
-                    <div class="sub mt-1">ČR + SK · 180&nbsp;lidí</div>
-                  </div>
-                </div>
-                <!-- photo — baterie / rozvaděč -->
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1581091870622-1c6a4e4a1ac8?auto=format&fit=crop&w=900&q=80')">
-                  <span class="tag">Baterie 10 kWh</span>
-                  <div class="cap">
-                    <div><div class="meta">Ostrava</div><div class="place">Rodinný dům</div></div>
-                    <div class="meta">2025</div>
-                  </div>
-                </div>
-                <!-- time-to-install stat -->
-                <div class="dm-tile dm-w-sq dm-stat dm-amber">
-                  <div class="eye">/ 07 · rychlost</div>
-                  <div>
-                    <div class="big tabular">30<span class="text-[24px] align-top">&nbsp;dní</span></div>
-                    <div class="lbl mt-1">průměrná doba dokončení zakázky.</div>
-                  </div>
-                </div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7452-1-1.png.webp')"></div>
               </div>
               <!-- SET B2 duplicate -->
               <div class="flex gap-[14px] shrink-0" aria-hidden="true">
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1627906812210-d04d5c61d0b1?auto=format&fit=crop&w=900&q=80')"><span class="tag">Tepelné čerpadlo</span><div class="cap"><div><div class="meta">Olomouc</div><div class="place">Rodinný dům</div></div><div class="meta">14 kW</div></div></div>
-                <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 04 · leady</div><div><div class="big tabular">100<span class="text-[32px] align-top">+</span></div><div class="lbl mt-1">kvalitních leadů měsíčně — každý obchodník dostává od&nbsp;nás.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DSC06818-1-1.png.webp')"></div>
+                <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 04 · leady</div><div><div class="big tabular">100<span class="text-[32px] align-top">+</span></div><div class="lbl mt-1">kvalitních leadů měsíčně.</div></div></div>
                 <div class="dm-tile dm-w-md dm-gauge"><div class="eye font-mono text-[10px] uppercase opacity-70 tracking-widest">/ 05 · konverze</div><div class="bar-row"><div><div class="row mb-1"><span>schůzka → nabídka</span><span>74%</span></div><div class="bar"><span style="width:74%"></span></div></div><div><div class="row mb-1"><span>nabídka → smlouva</span><span>38%</span></div><div class="bar"><span style="width:38%;background:#fde68a"></span></div></div><div><div class="row mb-1"><span>smlouva → realizace</span><span>96%</span></div><div class="bar"><span style="width:96%;background:#E30A1A"></span></div></div></div></div>
-                <div class="dm-tile dm-w-sq dm-photo" style="background-image:url('https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=80')"><span class="tag">8,4 kWp</span><div class="cap"><div><div class="meta">Liberec</div><div class="place">p.&nbsp;Svoboda</div></div></div></div>
-                <div class="dm-tile dm-w-md dm-stat dm-paper"><div class="eye">/ 06 · instalovaný výkon</div><div><div class="big tabular">124 <span class="text-[24px]">MW</span></div><div class="lbl mt-1">celkový výkon FVE, které pro&nbsp;klienty točí proud.</div></div></div>
-                <div class="dm-tile dm-w-sq dm-badge"><div class="stamp">CZ<br>SK</div><div><h5>12 poboček</h5><div class="sub mt-1">ČR + SK · 180&nbsp;lidí</div></div></div>
-                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('https://images.unsplash.com/photo-1581091870622-1c6a4e4a1ac8?auto=format&fit=crop&w=900&q=80')"><span class="tag">Baterie 10 kWh</span><div class="cap"><div><div class="meta">Ostrava</div><div class="place">Rodinný dům</div></div><div class="meta">2025</div></div></div>
-                <div class="dm-tile dm-w-sq dm-stat dm-amber"><div class="eye">/ 07 · rychlost</div><div><div class="big tabular">30<span class="text-[24px] align-top">&nbsp;dní</span></div><div class="lbl mt-1">průměrná doba dokončení zakázky.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7763-1-1.jpg.webp')"></div>
+                <div class="dm-tile dm-w-md dm-stat dm-ink"><div class="eye">/ 06 · výdělek</div><div><div class="big tabular">118k</div><div class="lbl mt-1">Kč měsíčně — průměrný výdělek.</div></div></div>
+                <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7452-1-1.png.webp')"></div>
               </div>
             </div>
             <span class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-paper to-transparent z-[2]"></span>
@@ -1472,9 +1314,9 @@
             <svg width="28" height="20" viewBox="0 0 28 20" fill="none" class="text-brand"><path d="M10 0 C 4 2, 0 8, 0 16 V20 H10 V10 H5 C6 6, 8 3, 11 2zM24 0 C 18 2, 14 8, 14 16 V20 H24 V10 H19 C20 6, 22 3, 25 2z" fill="currentColor"/></svg>
             <p class="mt-4 text-[15px] text-slate2-900 leading-relaxed">Za 2 roky jsem se dostal na <span class="font-bold">120 000 Kč měsíčně</span>. Férový systém a skvělý tým.</p>
             <div class="mt-6 flex items-center gap-3">
-              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&amp;fit=crop&amp;w=160&amp;h=160&amp;q=80" alt="" width="40" height="40" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" decoding="async"/>
+              <img src="jan-kaiser.jpg" alt="Jan Kaiser" width="40" height="40" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" decoding="async"/>
               <div class="text-[13px]">
-                <div class="font-bold">Karel Vystrčil</div>
+                <div class="font-bold">Jan Kaiser</div>
                 <div class="text-slate2-500">B2B obchodník · 2 roky</div>
               </div>
             </div>
@@ -1513,7 +1355,7 @@
     <div class="max-w-3xl mx-auto reveal">
       <div class="eyebrow text-white/60 mb-5">· Teď, nebo nikdy</div>
       <h2 class="h-tight text-[44px] md:text-[72px] font-extrabold">Máš na to u nás pracovat?<br/><span class="text-lime2-300">Ověř si to.</span></h2>
-      <p class="mt-6 text-white/70 text-lg">60 sekund. 4 kroky. Žádný životopis, žádný cover letter.</p>
+      <p class="mt-6 text-white/70 text-lg">Do 60 sekund hotovo.</p>
       <button data-open-modal class="mt-10 btn-primary rounded-full pl-8 pr-2 py-2.5 text-lg font-semibold inline-flex items-center gap-3 glow-red">
         Chci se přidat k týmu
         <span class="grid place-items-center w-12 h-12 rounded-full bg-white/15"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1530,7 +1372,6 @@
       <div class="lg:col-span-5 reveal">
         <div class="eyebrow text-slate2-500 mb-4">· Přihláška</div>
         <h2 class="h-tight text-[40px] md:text-[52px] font-extrabold text-slate2-900">Nebo vyplň rovnou tady.</h2>
-        <p class="mt-5 text-slate2-600 text-[17px] leading-relaxed max-w-[420px]">Stejné 4 kroky jako v modálu — jen pohodlně vedle obsahu. Žádná registrace.</p>
         <div class="mt-10 rounded-2xl bg-white border border-line p-5 shadow-card max-w-[420px]">
           <div class="text-[11px] font-mono text-slate2-500 uppercase tracking-[.2em]">Co bude dál</div>
           <ol class="mt-3 space-y-3 text-sm text-slate2-900">
@@ -1564,35 +1405,35 @@
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
             <span class="font-semibold text-[17px] text-slate2-900">Musím mít zkušenosti s obchodem?</span>
-            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
           <p class="mt-4 text-slate2-600 leading-relaxed">Ne. Zaškolíme tě od nuly — skripty, apka, doprovod na prvních schůzkách. Musíš ale umět s lidmi a chtít se učit.</p>
         </details>
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
             <span class="font-semibold text-[17px] text-slate2-900">Jak to funguje s leady — vážně žádný cold call?</span>
-            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
           <p class="mt-4 text-slate2-600 leading-relaxed">Marketing + servisní tým ti dodá ~120 horkých leadů měsíčně. Tvoje role: schůzka, nabídka, podpis. Žádné vytáčení ze seznamu.</p>
         </details>
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
             <span class="font-semibold text-[17px] text-slate2-900">Jak rychle se dostanu na slíbené výdělky?</span>
-            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
           <p class="mt-4 text-slate2-600 leading-relaxed">Průměr 80 000 Kč vidíme u našich OZ po cca 3 měsících. Není to garance — je to realita z interních dat.</p>
         </details>
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
             <span class="font-semibold text-[17px] text-slate2-900">Potřebuju řidičák a auto?</span>
-            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
           <p class="mt-4 text-slate2-600 leading-relaxed">Řidičák ano (jezdí se ke klientům). Auto pomůžeme zařídit přes firemní leasing po zaškolení.</p>
         </details>
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
             <span class="font-semibold text-[17px] text-slate2-900">Je to živnost, nebo zaměstnanecký poměr?</span>
-            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
           <p class="mt-4 text-slate2-600 leading-relaxed">Spolupracujeme na IČO — odpovídá to logice „pán svého času“ a provizí bez stropu. S účetnictvím pomůžeme.</p>
         </details>
@@ -1616,7 +1457,6 @@
           Ozvi&nbsp;se.<br/>
           Zbytek už <span class="swoosh">zařídíme</span>.
         </h2>
-        <p class="mt-6 text-white/60 text-[17px] max-w-[520px] leading-relaxed">Stačí krátký telefon nebo e-mail. Ozveme se do 24 hodin, domluvíme se na kávě nebo callu — bez tlaku, bez scénáře.</p>
       </div>
 
       <div class="lg:col-span-5 flex lg:justify-end">
@@ -1632,16 +1472,16 @@
       <!-- Call -->
       <a href="tel:+420226223800" class="group relative rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-8 hover:bg-white/[0.06] hover:border-white/20 transition reveal overflow-hidden" style="--i:1">
         <div aria-hidden class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-brand/10 blur-3xl group-hover:bg-brand/20 transition"></div>
-        <div class="relative flex items-start justify-between gap-6">
+        <div class="relative flex items-start justify-between gap-4">
           <div>
             <div class="text-[11px] font-mono uppercase tracking-[.2em] text-white/40">/ 01</div>
             <div class="mt-4 flex items-center gap-3">
-              <span class="grid place-items-center w-10 h-10 rounded-full bg-white/5 text-white/70">
+              <span class="shrink-0 grid place-items-center w-10 h-10 rounded-full bg-white/5 text-white/70">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
               <div>
                 <div class="text-[13px] text-white/50">Zavolej nám</div>
-                <div class="mt-0.5 tabular font-extrabold text-[28px] md:text-[34px] leading-none">226 223 800</div>
+                <div class="mt-0.5 tabular font-extrabold text-[22px] md:text-[34px] leading-none">226 223 800</div>
               </div>
             </div>
             <div class="mt-5 text-[13px] text-white/50 flex items-center gap-2">
@@ -1658,16 +1498,16 @@
       <!-- Email -->
       <a href="mailto:info@domidomi.cz" class="group relative rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-8 hover:bg-white/[0.06] hover:border-white/20 transition reveal overflow-hidden" style="--i:2">
         <div aria-hidden class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-sun-400/10 blur-3xl group-hover:bg-sun-400/20 transition"></div>
-        <div class="relative flex items-start justify-between gap-6">
-          <div>
+        <div class="relative flex items-start justify-between gap-4">
+          <div class="min-w-0">
             <div class="text-[11px] font-mono uppercase tracking-[.2em] text-white/40">/ 02</div>
-            <div class="mt-4 flex items-center gap-3">
-              <span class="grid place-items-center w-10 h-10 rounded-full bg-white/5 text-white/70">
+            <div class="mt-4 flex items-center gap-3 min-w-0">
+              <span class="shrink-0 grid place-items-center w-10 h-10 rounded-full bg-white/5 text-white/70">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.5M3 7.5A2 2 0 0 1 5 5.5h14a2 2 0 0 1 2 2M3 7.5l9 6 9-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
-              <div>
+              <div class="min-w-0">
                 <div class="text-[13px] text-white/50">Napiš nám</div>
-                <div class="mt-0.5 font-extrabold text-[24px] md:text-[28px] leading-none">info@domidomi.cz</div>
+                <div class="mt-0.5 font-extrabold text-[18px] md:text-[28px] leading-none">info@domidomi.cz</div>
               </div>
             </div>
             <div class="mt-5 text-[13px] text-white/50 flex items-center gap-2">
@@ -1738,11 +1578,7 @@
         <span class="text-white/20">·</span>
         <span>U nákladového nádraží 3265/10, 130 00 Praha 3</span>
       </div>
-      <div class="flex items-center gap-5">
-        <a href="#" class="underline underline-offset-4 decoration-white/20 hover:decoration-white hover:text-white/70 transition">GDPR</a>
-        <a href="#" class="hover:text-white/70 transition">Podmínky</a>
-        <a href="#" class="hover:text-white/70 transition">Cookies</a>
-      </div>
+      <a href="#" class="underline underline-offset-4 decoration-white/20 hover:decoration-white hover:text-white/70 transition shrink-0">GDPR</a>
     </div>
   </div>
 </footer>
@@ -2121,7 +1957,7 @@
       const body = host.querySelector('#step-body');
       if (state.step === 0) body.innerHTML = renderOptions(regions, state.region, (v)=>{ state.region=v; next(); });
       if (state.step === 1) body.innerHTML = renderOptions(experience, state.exp, (v)=>{ state.exp=v; next(); });
-      if (state.step === 2) body.innerHTML = renderOptions(['Ano, aktivně řídím','Ano, ale zřídka','Zatím nemám'], state.license, (v)=>{ state.license=v; next(); });
+      if (state.step === 2) body.innerHTML = renderOptions(['Ano','Ne'], state.license, (v)=>{ state.license=v; next(); });
       if (state.step === 3) body.innerHTML = renderContact(state, submit);
       // nav
       const nav = document.createElement('div');
@@ -2218,8 +2054,9 @@
         </div>
         <label class="flex items-start gap-3 mt-1 text-[13px] text-slate2-600">
           <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
-          <span>Souhlasím se zpracováním údajů za účelem náboru (platí 6 měsíců, možno kdykoli odvolat).</span>
+          <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
         </label>
+        <div class="g-recaptcha mt-3" data-sitekey="6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv"></div>
         <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
           <span class="sm:hidden">Odeslat a domluvit schůzku</span>
           <span class="hidden sm:inline">Odeslat a rezervovat termín pohovoru</span>
@@ -2255,7 +2092,40 @@
 (() => {
   const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
-  const licenses = ['Ano, aktivně řídím','Ano, ale zřídka','Zatím nemám'];
+  const licenses = ['Ano','Ne'];
+  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
+
+  function getMakeWebhookUrl() {
+    const fromBody = document.body && document.body.getAttribute('data-make-webhook');
+    if (fromBody && fromBody.trim()) return fromBody.trim();
+    if (typeof window.__MAKE_WEBHOOK_URL === 'string' && window.__MAKE_WEBHOOK_URL.trim()) return window.__MAKE_WEBHOOK_URL.trim();
+    return '';
+  }
+
+  function initRecaptchaSlot(container) {
+    const slot = container.querySelector('.recaptcha-slot');
+    if (!slot) return;
+    slot.innerHTML = '';
+    delete slot.dataset.gRecaptchaId;
+    const mount = () => {
+      if (!window.grecaptcha || !slot.isConnected) return;
+      grecaptcha.ready(function () {
+        try {
+          var wid = grecaptcha.render(slot, { sitekey: RECAPTCHA_SITEKEY });
+          slot.dataset.gRecaptchaId = String(wid);
+        } catch (e) { console.error(e); }
+      });
+    };
+    if (window.grecaptcha) mount();
+    else {
+      var n = 0;
+      var t = setInterval(function () {
+        n++;
+        if (window.grecaptcha) { clearInterval(t); mount(); }
+        if (n > 100) clearInterval(t);
+      }, 50);
+    }
+  }
 
   window.__mountFormV2 = function(host, initial) {
     const state = Object.assign({ step: 0, region: null, exp: null, license: null, name: '', phone: '', email: '' }, initial || {});
@@ -2300,12 +2170,64 @@
         });
       });
       const cf = body.querySelector('#contact-form');
-      if (cf) cf.addEventListener('submit', (e) => {
+      if (cf) cf.addEventListener('submit', function (e) {
         e.preventDefault();
-        const fd = new FormData(cf);
-        state.name = fd.get('name'); state.phone = fd.get('phone'); state.email = fd.get('email');
-        success();
+        var errEl = cf.querySelector('.form-submit-error');
+        var btn = cf.querySelector('[type="submit"]');
+        function showErr(msg) {
+          if (errEl) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+        }
+        if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+
+        var slot = cf.querySelector('.recaptcha-slot');
+        var wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : 0;
+        var token = window.grecaptcha ? grecaptcha.getResponse(wid) : '';
+        if (!token) {
+          showErr('Potvrď prosím reCAPTCHA (nejsem robot).');
+          return;
+        }
+
+        var fd = new FormData(cf);
+        state.name = fd.get('name');
+        state.phone = fd.get('phone');
+        state.email = fd.get('email');
+
+        var webhookUrl = getMakeWebhookUrl();
+        if (!webhookUrl) {
+          showErr('Chybí URL webhooku: doplň atribut data-make-webhook u prvku body nebo window.__MAKE_WEBHOOK_URL.');
+          return;
+        }
+
+        var payload = {
+          source: host.id === 'modal-host' ? 'modal' : 'inline',
+          name: state.name,
+          phone: state.phone,
+          email: state.email,
+          region: state.region,
+          experience: state.exp,
+          license: state.license,
+          recaptchaToken: token,
+          submittedAt: new Date().toISOString()
+        };
+
+        if (btn) btn.disabled = true;
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          success();
+        }).catch(function (err) {
+          console.error(err);
+          showErr('Odeslání se nezdařilo. Zkus to prosím znovu.');
+          if (window.grecaptcha && !isNaN(wid)) grecaptcha.reset(wid);
+        }).finally(function () {
+          if (btn) btn.disabled = false;
+        });
       });
+
+      if (state.step === 3) requestAnimationFrame(function () { initRecaptchaSlot(body); });
 
       requestAnimationFrame(() => body.classList.add('step-in'));
     }
@@ -2341,8 +2263,10 @@
           </div>
           <label class="flex items-start gap-3 mt-1 text-[13px] text-slate2-600">
             <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
-            <span>Souhlasím se zpracováním údajů za účelem náboru (platí 6 měsíců, možno kdykoli odvolat).</span>
+            <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
           </label>
+          <div class="recaptcha-slot mt-3 min-h-[78px]"></div>
+          <p class="form-submit-error hidden text-sm text-red-600 mt-2" role="alert"></p>
           <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
             <span class="sm:hidden">Odeslat a domluvit schůzku</span>
             <span class="hidden sm:inline">Odeslat a rezervovat termín pohovoru</span>
