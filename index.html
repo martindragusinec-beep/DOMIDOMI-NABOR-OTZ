@@ -483,7 +483,43 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* ecosystem orbit */
   @keyframes spin-slow { from { transform: rotate(0) } to { transform: rotate(360deg) } }
   .spin-slow { animation: spin-slow 80s linear infinite; }
+  .spin-fast { animation: spin-slow 18s linear infinite; }
   .counter-rot { animation: spin-slow 80s linear infinite reverse; }
+  /* eco-card hover provize tooltip */
+  .eco-card { position: relative; }
+  .eco-provize {
+    position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(4px);
+    background: #a3e635; color: #0c111d; white-space: nowrap;
+    padding: 6px 14px; border-radius: 999px; pointer-events: none;
+    opacity: 0; transition: opacity .18s, transform .18s;
+    box-shadow: 0 4px 16px rgba(163,230,53,.45);
+    z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  }
+  .eco-provize .ep-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .7;
+  }
+  .eco-provize .ep-amount {
+    font-size: 15px; font-weight: 800; line-height: 1.1;
+  }
+  .eco-provize::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: #a3e635;
+  }
+  .eco-card:hover .eco-provize { opacity: 1; transform: translateX(-50%) translateY(0); }
+  /* eco-card mobile shrink — aby se poletující bubliny nepřekrývaly v menším kruhu */
+  @media (max-width: 640px) {
+    .eco-card > div.flex {
+      padding: 6px 10px !important;
+      gap: 6px !important;
+      border-radius: 14px !important;
+    }
+    .eco-card img { width: 22px !important; height: 22px !important; }
+    .eco-card span.font-semibold { font-size: 11px !important; line-height: 1.2 !important; }
+    .eco-card [style*="max-width:210px"] { max-width: 140px !important; }
+    .eco-provize { padding: 4px 10px !important; bottom: calc(100% + 6px) !important; }
+    .eco-provize .ep-label { font-size: 8px !important; }
+    .eco-provize .ep-amount { font-size: 12px !important; }
+  }
   /* tweaks panel */
   .tw-field { display:flex; align-items:center; justify-content:space-between; gap: .75rem; padding: .5rem 0; }
   .tw-field + .tw-field { border-top: 1px dashed rgba(255,255,255,.08); }
@@ -564,21 +600,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           Získej svobodu, pasivní&nbsp;příjem
           <span class="inline-block"><span class="swoosh">a&nbsp;práci,</span></span><br/>která dává <span class="text-lime2-300">smysl</span>.
         </h1>
-        <p class="mt-5 text-white/80 text-[15px] md:text-base max-w-[520px] reveal" style="--i:2">
-          Neprodáváme produkt, ale <span class="text-white font-semibold">kompletní řešení pro dům</span>. S námi neřešíš cold cally — dodáme ti <span class="text-white font-semibold">horké leady</span>.
+        <p class="mt-5 text-white/80 text-[15px] md:text-[17px] leading-relaxed max-w-[560px] reveal" style="--i:2">
+          Neprodáváš jen jeden produkt, ale <span class="text-white font-semibold">kompletní řešení pro&nbsp;dům</span>, které lidem zajistí úsporné a&nbsp;spokojené bydlení. Dostaneš jen kontakt na <span class="text-lime2-300 font-semibold">ověřené klienty</span>.
         </p>
 
         <!-- trust box -->
-        <div class="mt-6 inline-flex items-center gap-4 rounded-2xl bg-white/[.08] backdrop-blur border border-white/10 pl-2 pr-5 py-2 reveal" style="--i:3">
-          <div class="flex -space-x-2">
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/justin-funck.avif" type="image/avif"/><source srcset="media/justin-funck.webp" type="image/webp"/><img src="media/justin-funck.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
-            <span class="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/josef-dreser.avif" type="image/avif"/><source srcset="media/josef-dreser.webp" type="image/webp"/><img src="media/josef-dreser.webp" alt="" width="32" height="32" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
-            <span class="w-8 h-8 rounded-full bg-lime2-400 text-ink-900 text-[10px] font-bold grid place-items-center ring-2 ring-ink-900">+100</span>
+        <div class="mt-6 inline-flex items-center gap-5 rounded-2xl bg-white/[.08] backdrop-blur border border-white/10 pl-3 pr-6 py-3 reveal" style="--i:3">
+          <div class="flex -space-x-2.5">
+            <span class="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="" width="44" height="44" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
+            <span class="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/justin-funck.avif" type="image/avif"/><source srcset="media/justin-funck.webp" type="image/webp"/><img src="media/justin-funck.webp" alt="" width="44" height="44" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
+            <span class="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-ink-900 shrink-0"><picture class="contents"><source srcset="media/josef-dreser.avif" type="image/avif"/><source srcset="media/josef-dreser.webp" type="image/webp"/><img src="media/josef-dreser.webp" alt="" width="44" height="44" class="w-full h-full object-cover" decoding="async" loading="lazy"/></picture></span>
+            <span class="w-11 h-11 rounded-full bg-lime2-400 text-ink-900 text-[12px] font-bold grid place-items-center ring-2 ring-ink-900">+100</span>
           </div>
-          <div class="text-[13px] leading-tight">
-            <div class="text-white/60">Průměrný výdělek OZ</div>
-            <div class="font-semibold tabular"><span class="text-lime2-300">80 000</span> – <span class="text-lime2-300">150 000 Kč</span> měsíčně</div>
+          <div class="text-[15px] md:text-[16px] leading-snug">
+            <div class="text-white/60 text-[12px] md:text-[13px] uppercase tracking-[.14em]">Průměrný výdělek OZ</div>
+            <div class="mt-0.5 font-semibold tabular text-[17px] md:text-[19px]"><span class="text-lime2-300">80 000</span> – <span class="text-lime2-300">150 000 Kč</span> měsíčně</div>
           </div>
         </div>
 
@@ -590,10 +626,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
 
         <!-- micro-trust line -->
-        <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/60 reveal" style="--i:5">
-          <span class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> horké leady, žádný cold call</span>
-          <span class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> provize bez stropu</span>
-          <span class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> vlastní čas, vlastní pravidla</span>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-[14px] md:text-[15px] font-medium text-white/75 reveal" style="--i:5">
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> horké leady, žádný cold call</span>
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> provize bez stropu</span>
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M20 6L9 17l-5-5" stroke="#a3e635" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> vlastní čas, vlastní pravidla</span>
         </div>
       </div>
 
@@ -643,71 +679,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- USP carousel / grid -->
     <div class="usp-wrap mt-8">
     <div class="usp-scroll grid grid-cols-1 md:grid-cols-6 gap-3 stagger">
-      <!-- USP 1 -->
-      <article class="card-lift md:col-span-3 reveal" style="--i:1">
-        <div class="h-full rounded-3xl bg-white border border-line p-6 shadow-card hover:shadow-cardHover flex flex-col">
+      <!-- USP 1 — Ekosystém -->
+      <article class="card-lift md:col-span-2 reveal" style="--i:1">
+        <div class="h-full rounded-3xl bg-sun-200 p-6 shadow-card flex flex-col">
           <div class="flex items-start justify-between">
-            <span class="chip bg-brand/10 text-brand"><span class="dot bg-brand"></span> 01 · Leady</span>
-            <span class="font-mono text-[11px] text-slate2-500">/01</span>
+            <span class="chip bg-black/10 text-ink-900"><span class="dot bg-ink-900"></span> 01 · Ekosystém</span>
+            <span class="font-mono text-[11px] text-ink-900/40">/01</span>
           </div>
-          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-slate2-900">Žádné cold leady.<br/>Jen ověřený obchod.</h3>
-          <p class="mt-2 text-slate2-600 text-[14px] leading-relaxed">Jen ověřené leady a ryzí obchod.</p>
-          <!-- animated bar chart -->
-          <div class="mt-auto pt-5 grid grid-cols-4 gap-2 items-end h-24" data-leads-chart>
-            <div class="rounded-lg bg-slate-200 lead-bar" data-tgt="18"></div>
-            <div class="rounded-lg bg-slate-300 lead-bar" data-tgt="32"></div>
-            <div class="rounded-lg bg-lime2-300 lead-bar" data-tgt="58"></div>
-            <div class="rounded-lg bg-brand lead-bar relative" data-tgt="100">
-              <span class="absolute -top-1 right-0 -translate-y-full chip bg-brand text-white text-[10px] shadow-md leads-badge whitespace-nowrap">✓ 120/měs</span>
-            </div>
-          </div>
-          <div class="mt-3 flex justify-between text-[11px] font-mono text-slate2-500">
-            <span>cold call</span><span>email</span><span>doporučení</span><span>náš lead</span>
+          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-ink-900">Už nikdy jen<br/>jeden produkt!</h3>
+          <p class="mt-2 text-ink-900/75 text-[14px] leading-relaxed">Navrhuješ a prodáváš kombinaci služeb, kterou zákazník poptává, šetří mu peníze a usnadňuje život.</p>
+          <div class="mt-auto pt-5 flex flex-wrap gap-1.5">
+            <span class="chip bg-white/70 text-ink-900">Fotovoltaika</span>
+            <span class="chip bg-white/70 text-ink-900">Tepelná čerpadla</span>
+            <span class="chip bg-white/70 text-ink-900">Energie</span>
+            <span class="chip bg-white/70 text-ink-900">Finance</span>
+            <span class="chip bg-white/70 text-ink-900">Stavby</span>
+            <span class="chip bg-white/70 text-ink-900">Servis</span>
           </div>
         </div>
       </article>
 
-      <!-- USP 2 -->
-      <article class="card-lift md:col-span-3 reveal" style="--i:2">
-        <div class="h-full rounded-3xl bg-ink-900 text-white p-6 shadow-card flex flex-col overflow-hidden relative">
-          <span class="chip bg-white/10 text-white/80 self-start"><span class="dot bg-lime2-400"></span> 02 · Pasivní příjem</span>
-          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold">Provize, co ti chodí<br/>každý měsíc.</h3>
-          <p class="mt-2 text-white/70 text-[14px] leading-relaxed">Provize z energií, které ti chodí každý měsíc. Žádný strop.</p>
-
-          <!-- residuál counter -->
-          <div class="mt-auto pt-6 relative">
-            <div class="text-[10px] uppercase tracking-[.2em] text-white/50 font-mono">Měsíční reziduál</div>
-            <div class="mt-1 flex items-baseline gap-2">
-              <span class="tabular font-extrabold text-[44px] md:text-[52px] leading-none text-lime2-300" data-residual-counter data-target="24800">0 Kč</span>
+      <!-- USP 2 — Špičkové technologie (horizontal) -->
+      <article class="card-lift md:col-span-4 reveal" style="--i:2">
+        <div class="h-full rounded-3xl bg-white border border-line p-6 md:p-7 shadow-card hover:shadow-cardHover flex flex-col md:flex-row gap-5 md:gap-8 md:items-stretch">
+          <div class="md:flex-1 flex flex-col">
+            <span class="chip bg-slate-100 text-slate2-600 self-start"><span class="dot bg-slate2-600"></span> 02 · Špičkové technologie</span>
+            <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-slate2-900">Řešení pro zákazníka<br/>během pár vteřin.</h3>
+            <p class="mt-2 text-slate2-600 text-[14px] leading-relaxed">Máš v kapse nástroje, které za tebe navrhnou to nejlepší řešení. Energie na míru? Z fotky faktury okamžitě vytěží data a doporučí nejlepší tarif.</p>
+            <div class="mt-auto pt-5 flex flex-wrap gap-1.5">
+              <span class="chip bg-slate-100 text-slate2-600">Skener faktury</span>
+              <span class="chip bg-slate-100 text-slate2-600">AI návrh</span>
+              <span class="chip bg-slate-100 text-slate2-600">Okamžitý výpočet</span>
             </div>
-            <div class="mt-3 flex items-end gap-1 h-10">
-              <span class="flex-1 rounded bg-white/10" style="height:18%"></span>
-              <span class="flex-1 rounded bg-white/15" style="height:28%"></span>
-              <span class="flex-1 rounded bg-white/20" style="height:38%"></span>
-              <span class="flex-1 rounded bg-lime2-300/30" style="height:50%"></span>
-              <span class="flex-1 rounded bg-lime2-300/50" style="height:62%"></span>
-              <span class="flex-1 rounded bg-lime2-300/70" style="height:75%"></span>
-              <span class="flex-1 rounded bg-lime2-300/85" style="height:88%"></span>
-              <span class="flex-1 rounded bg-lime2-300" style="height:100%"></span>
-            </div>
-            <div class="mt-2 flex justify-between text-[10px] font-mono text-white/40">
-              <span>měsíc 1</span>
-              <span>měsíc 12</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- USP 3 — horizontal -->
-      <article class="card-lift md:col-span-4 reveal" style="--i:3">
-        <div class="h-full rounded-3xl bg-white border border-line p-6 shadow-card hover:shadow-cardHover flex flex-col md:flex-row gap-5 md:items-center">
-          <div class="md:flex-1">
-            <span class="chip bg-slate-100 text-slate2-600"><span class="dot bg-slate2-600"></span> 03 · Špičková technologie</span>
-            <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-slate2-900">Appka, co fotkou faktury spočítá úsporu.</h3>
-            <p class="mt-2 text-slate2-600 text-[14px] leading-relaxed">Špičkový nástroj, co ti na schůzce ušetří hodinu a klientovi pomůže rozhodnout se.</p>
           </div>
           <!-- scan → savings animation -->
-          <div class="relative h-44 md:w-[320px] md:shrink-0 rounded-2xl bg-slate-50 border border-line overflow-hidden mt-auto md:mt-0" data-scan-scene>
+          <div class="relative h-44 md:w-[320px] md:h-auto md:min-h-[220px] md:self-stretch md:shrink-0 rounded-2xl bg-slate-50 border border-line overflow-hidden mt-auto md:mt-0" data-scan-scene>
             <div class="absolute inset-4 grid grid-cols-5 gap-3 items-stretch">
               <!-- invoice paper -->
               <div class="col-span-2 relative rounded-xl bg-white border border-line p-2.5 overflow-hidden scan-paper">
@@ -728,17 +734,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <span class="text-[7px] font-mono text-slate-400">CELKEM</span>
                   <span class="tabular text-[10px] font-bold text-slate2-900" data-scan-invtotal>9 842 Kč</span>
                 </div>
-                <!-- corner markers -->
                 <span class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-brand/80 scan-corners"></span>
                 <span class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-brand/80 scan-corners"></span>
                 <span class="absolute bottom-1 left-1 w-2 h-2 border-b-2 border-l-2 border-brand/80 scan-corners"></span>
                 <span class="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-brand/80 scan-corners"></span>
-                <!-- scan laser -->
                 <span class="scan-laser"></span>
-                <!-- scan glow overlay -->
                 <span class="scan-glow"></span>
               </div>
-
               <!-- arrow -->
               <div class="col-span-1 grid place-items-center">
                 <div class="relative">
@@ -748,7 +750,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </span>
                 </div>
               </div>
-
               <!-- savings result -->
               <div class="col-span-2 relative rounded-xl bg-ink-900 text-white p-3 flex flex-col overflow-hidden scan-result">
                 <div class="flex items-center gap-1.5">
@@ -775,47 +776,81 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </article>
 
-      <!-- USP 4 -->
-      <article class="card-lift md:col-span-2 reveal" style="--i:4">
-        <div class="h-full rounded-3xl bg-sun-200 p-6 shadow-card flex flex-col">
-          <span class="chip bg-black/10 text-ink-900"><span class="dot bg-ink-900"></span> 04 · Ekosystém</span>
-          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-ink-900">Ne řešení.<br/>Celý ekosystém.</h3>
-          <p class="mt-2 text-ink-900/80 text-[14px] leading-relaxed">Neprodáváš jen jedno řešení, ale celý ekosystém.</p>
-          <div class="mt-auto pt-5 flex flex-wrap gap-1.5">
-            <span class="chip bg-white/70 text-ink-900">Fotovoltaika</span>
-            <span class="chip bg-white/70 text-ink-900">Tepelná čerpadla</span>
-            <span class="chip bg-white/70 text-ink-900">Energie</span>
-            <span class="chip bg-white/70 text-ink-900">Finance</span>
-            <span class="chip bg-white/70 text-ink-900">Stavby</span>
-            <span class="chip bg-white/70 text-ink-900">Servis</span>
+      <!-- USP 3 — Ověření klienti -->
+      <article class="card-lift md:col-span-3 reveal" style="--i:3">
+        <div class="h-full rounded-3xl bg-white border border-line p-6 shadow-card hover:shadow-cardHover flex flex-col">
+          <div class="flex items-start justify-between">
+            <span class="chip bg-brand/10 text-brand"><span class="dot bg-brand"></span> 03 · Ověření klienti</span>
+          </div>
+          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-slate2-900">Žádné cold cally.<br/>Jen ověření klienti.</h3>
+          <p class="mt-2 text-slate2-600 text-[14px] leading-relaxed">Soustředíš se na ověřené kontakty a na ryzí obchod.</p>
+          <!-- animated bar chart -->
+          <div class="mt-auto pt-5 grid grid-cols-4 gap-2 items-end h-24" data-leads-chart>
+            <div class="rounded-lg bg-slate-200 lead-bar" data-tgt="18"></div>
+            <div class="rounded-lg bg-slate-300 lead-bar" data-tgt="32"></div>
+            <div class="rounded-lg bg-lime2-300 lead-bar" data-tgt="58"></div>
+            <div class="rounded-lg bg-brand lead-bar relative" data-tgt="100">
+              <span class="absolute -top-1 right-0 -translate-y-full chip bg-brand text-white text-[10px] shadow-md leads-badge whitespace-nowrap">✓ 120/měs</span>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between text-[11px] font-mono text-slate2-500">
+            <span>cold call</span><span>email</span><span>doporučení</span><span>náš lead</span>
           </div>
         </div>
       </article>
 
-      <!-- USP 5 -->
+      <!-- USP 4 — Pasivní příjem -->
+      <article class="card-lift md:col-span-3 reveal" style="--i:4">
+        <div class="h-full rounded-3xl bg-ink-900 text-white p-6 shadow-card flex flex-col overflow-hidden relative">
+          <span class="chip bg-white/10 text-white/80 self-start"><span class="dot bg-lime2-400"></span> 04 · Pasivní příjem</span>
+          <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold">Provize, co ti chodí<br/>každý rok.</h3>
+          <p class="mt-2 text-white/70 text-[14px] leading-relaxed">Díky kmenovým produktům ti část provize chodí každý rok. Žádný strop.</p>
+
+          <!-- roční příjem counter -->
+          <div class="mt-auto pt-6 relative">
+            <div class="text-[10px] uppercase tracking-[.2em] text-white/50 font-mono">Ročně klidně</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <span class="tabular font-extrabold text-[44px] md:text-[52px] leading-none text-lime2-300" data-residual-counter data-target="600000">0 Kč</span>
+            </div>
+            <div class="mt-3 flex items-end gap-1 h-10">
+              <span class="flex-1 rounded bg-white/10" style="height:18%"></span>
+              <span class="flex-1 rounded bg-white/15" style="height:28%"></span>
+              <span class="flex-1 rounded bg-white/20" style="height:38%"></span>
+              <span class="flex-1 rounded bg-lime2-300/30" style="height:50%"></span>
+              <span class="flex-1 rounded bg-lime2-300/50" style="height:62%"></span>
+              <span class="flex-1 rounded bg-lime2-300/70" style="height:75%"></span>
+              <span class="flex-1 rounded bg-lime2-300/85" style="height:88%"></span>
+              <span class="flex-1 rounded bg-lime2-300" style="height:100%"></span>
+            </div>
+            <div class="mt-2 flex justify-between text-[10px] font-mono text-white/40">
+              <span>500 000 Kč</span>
+              <span>700 000 Kč</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- USP 5 — Svoboda -->
       <article class="card-lift md:col-span-6 reveal" style="--i:5">
         <div class="h-full rounded-3xl bg-white border border-line p-6 md:p-7 shadow-card hover:shadow-cardHover flex flex-col md:flex-row gap-6 md:items-center">
-          <div class="md:w-[260px] md:shrink-0">
+          <div class="md:w-[280px] md:shrink-0">
             <span class="chip bg-lime2-50 text-lime2-500"><span class="dot bg-lime2-500"></span> 05 · Svoboda</span>
             <h3 class="mt-5 h-tight-sub text-2xl md:text-[26px] font-bold text-slate2-900 leading-[1.1]">Jsi pánem svého času.<br/>Fitko dopoledne? Žádný problém.</h3>
-            <p class="mt-3 text-slate2-600 text-[13.5px] leading-relaxed">Žádné stand-upy, žádná docházka. Dohodneme se na výsledcích — zbytek je na tobě.</p>
+            <p class="mt-3 text-slate2-600 text-[13.5px] leading-relaxed">Žádná nekonečná administrativa. Žádná docházka. Dohodneme se na výsledcích — zbytek je na tobě.</p>
           </div>
 
-          <!-- week schedule + floating fitko tag, bigger -->
+          <!-- week schedule + floating fitko tag -->
           <div class="relative md:flex-1 md:min-w-0">
             <div class="grid grid-cols-7 gap-2 text-[11px] font-mono text-slate2-500">
               <div class="text-center">PO</div><div class="text-center">ÚT</div><div class="text-center">ST</div><div class="text-center">ČT</div><div class="text-center">PÁ</div><div class="text-center">SO</div><div class="text-center">NE</div>
               <div class="h-24 rounded-lg bg-slate-100 relative"><span class="absolute inset-x-1.5 top-1.5 bottom-12 rounded bg-brand/10 border border-brand/30"></span><span class="absolute inset-x-1.5 bottom-1.5 h-9 rounded bg-lime2-200"></span></div>
               <div class="h-24 rounded-lg bg-slate-100 relative"><span class="absolute inset-x-1.5 top-1.5 bottom-6 rounded bg-brand/10 border border-brand/30"></span></div>
-              <!-- ST: fitko cell target -->
               <div class="h-24 rounded-lg bg-slate-100 relative" id="fitko-cell"><span class="absolute inset-x-1.5 top-6 bottom-1.5 rounded bg-sun-200 border border-sun-400/50"></span></div>
               <div class="h-24 rounded-lg bg-slate-100 relative"><span class="absolute inset-x-1.5 top-1.5 bottom-14 rounded bg-brand/10 border border-brand/30"></span><span class="absolute inset-x-1.5 bottom-1.5 h-12 rounded bg-lime2-200"></span></div>
               <div class="h-24 rounded-lg bg-slate-100 relative"><span class="absolute inset-x-1.5 top-3 bottom-9 rounded bg-brand/10 border border-brand/30"></span></div>
               <div class="h-24 rounded-lg bg-slate-50 relative"><span class="absolute inset-x-1.5 top-9 bottom-1.5 rounded bg-slate-200"></span></div>
               <div class="h-24 rounded-lg bg-slate-50"></div>
             </div>
-
-            <!-- floating fitko tag pointing at ST/10 -->
             <div class="absolute -top-3 left-[32%] rotate-[-4deg] fitko-float pointer-events-none">
               <div class="flex items-center gap-2 rounded-full bg-ink-900 text-white pl-2 pr-3 py-1.5 shadow-lg">
                 <span class="grid place-items-center w-6 h-6 rounded-full bg-lime2-300">
@@ -851,7 +886,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <!-- EKOSYSTÉM -->
-<section id="ekosystem" class="relative overflow-hidden section-dark text-white">
+<section id="ekosystem" class="relative section-dark text-white">
   <div class="relative max-w-[1360px] mx-auto px-4 lg:px-16 py-24 md:py-32">
     <div class="grid lg:grid-cols-12 gap-12 items-center">
       <div class="lg:col-span-5 reveal">
@@ -872,8 +907,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <!-- Circle diagram -->
-      <div class="lg:col-span-7 relative reveal" style="--i:2">
-        <div class="relative aspect-square max-w-[580px] mx-auto">
+      <div class="lg:col-span-7 relative reveal" style="--i:2; overflow:visible">
+        <div class="relative aspect-square max-w-[360px] sm:max-w-[460px] md:max-w-[540px] lg:max-w-[580px] mx-auto" style="overflow:visible">
           <!-- outer dashed -->
           <div class="absolute inset-0 rounded-full border border-dashed border-white/15"></div>
           <div class="absolute inset-8 rounded-full border border-dashed border-white/10"></div>
@@ -881,41 +916,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="absolute inset-[18%] rounded-full overflow-hidden border border-white/10 shadow-[0_12px_48px_-12px_rgba(0,0,0,.45)]">
             <picture class="w-full h-full block"><source srcset="media/ekosystem-dum.avif" type="image/avif"/><source srcset="media/ekosystem-dum.webp" type="image/webp"/><img src="media/ekosystem-dum.webp" alt="Rodinný dům s fotovoltaikou a tepelným čerpadlem" width="800" height="800" loading="lazy" decoding="async" class="w-full h-full object-cover object-center" /></picture>
           </div>
-          <!-- ecosystem items positioned around -->
-          <!-- top -->
-          <div class="eco-card absolute left-1/2 -translate-x-1/2 -top-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <img src="Tepelná čerpadla.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Tepelná čerpadla</span>
+          <!-- ecosystem items — 6× evenly at 60° intervals, radius 50% from center -->
+          <!-- 0° top — Tepelná čerpadla -->
+          <div class="eco-card absolute" style="left:50%;top:0%;transform:translate(-50%,-50%)">
+            <span class="eco-provize"><span class="ep-label">provize</span><span class="ep-amount">20 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-slow cursor-default">
+              <img src="Tepelná čerpadla.png" alt="" width="36" height="36" class="w-9 h-9 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900">Tepelná čerpadla</span>
+            </div>
           </div>
-          <!-- top-right -->
-          <div class="eco-card absolute right-0 top-[20%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <img src="Fotovoltaika.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Fotovoltaika</span>
+          <!-- 60° top-right — Fotovoltaické elektrárny -->
+          <div class="eco-card absolute" style="right:5%;top:25%;transform:translate(0,-50%)">
+            <span class="eco-provize" style="left:auto;right:0;transform:translateX(0) translateY(-4px)"><span class="ep-label">provize</span><span class="ep-amount">25 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-med cursor-default" style="max-width:210px;min-width:0">
+              <img src="Fotovoltaika.png" alt="" width="36" height="36" class="w-9 h-9 shrink-0 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900 leading-snug" style="min-width:0;word-break:break-word">Fotovoltaické elektrárny</span>
+            </div>
           </div>
-          <!-- right -->
-          <div class="eco-card absolute -right-2 bottom-[30%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <img src="Finance.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Finance</span>
+          <!-- 120° bottom-right — Financování projektů a dotace -->
+          <div class="eco-card absolute" style="right:5%;top:75%;transform:translate(0,-50%)">
+            <span class="eco-provize" style="left:auto;right:0;transform:translateX(0) translateY(-4px)"><span class="ep-label">provize</span><span class="ep-amount">5 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-slow cursor-default" style="max-width:210px;min-width:0">
+              <img src="Finance.png" alt="" width="36" height="36" class="w-9 h-9 shrink-0 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900 leading-snug" style="min-width:0;word-break:break-word">Financování projektů a dotace</span>
+            </div>
           </div>
-          <!-- bottom -->
-          <div class="eco-card absolute left-1/2 -translate-x-1/2 -bottom-2 flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <img src="Energie.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Energie</span>
+          <!-- 180° bottom — Výhodné fixované energie -->
+          <div class="eco-card absolute" style="left:50%;top:100%;transform:translate(-50%,-50%)">
+            <span class="eco-provize"><span class="ep-label">provize</span><span class="ep-amount">3 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-med cursor-default">
+              <img src="Energie.png" alt="" width="36" height="36" class="w-9 h-9 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900">Výhodné fixované energie</span>
+            </div>
           </div>
-          <!-- bottom-left -->
-          <div class="eco-card absolute left-0 bottom-[26%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-slow">
-            <img src="Stavby.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Stavby</span>
+          <!-- 240° bottom-left — Stavby a rekonstrukce (kotva: levý okraj karty = levý okraj diagramu) -->
+          <div class="eco-card absolute" style="left:0%;top:75%;transform:translate(0,-50%)">
+            <span class="eco-provize"><span class="ep-label">provize</span><span class="ep-amount">50 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-slow cursor-default">
+              <img src="Stavby.png" alt="" width="36" height="36" class="w-9 h-9 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900">Stavby a rekonstrukce</span>
+            </div>
           </div>
-          <!-- top-left -->
-          <div class="eco-card absolute left-[6%] top-[18%] flex items-center gap-2 bg-ink-800 border border-white/10 rounded-2xl px-3 py-2 shadow-ring float-med">
-            <img src="Servis.png" alt="" width="32" height="32" class="w-8 h-8 object-contain" loading="lazy" decoding="async"/>
-            <span class="font-semibold text-sm">Servis</span>
+          <!-- 300° top-left — Celoživotní servis (kotva: levý okraj) -->
+          <div class="eco-card absolute" style="left:0%;top:25%;transform:translate(0,-50%)">
+            <span class="eco-provize"><span class="ep-label">provize</span><span class="ep-amount">4 000 Kč</span></span>
+            <div class="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,.35)] float-med cursor-default">
+              <img src="Servis.png" alt="" width="36" height="36" class="w-9 h-9 object-contain" loading="lazy" decoding="async"/>
+              <span class="font-semibold text-[15px] text-ink-900">Celoživotní servis</span>
+            </div>
           </div>
 
-          <!-- orbital dot -->
-          <div class="absolute inset-0 spin-slow">
-            <span class="absolute left-1/2 -top-1 w-2 h-2 rounded-full bg-lime2-400 -translate-x-1/2"></span>
+          <!-- orbital dot — rychlejší -->
+          <div class="absolute inset-0 spin-fast pointer-events-none">
+            <span class="absolute left-1/2 -top-1 w-3 h-3 rounded-full bg-lime2-400 -translate-x-1/2 shadow-[0_0_8px_2px_rgba(163,230,53,.6)]"></span>
           </div>
         </div>
       </div>
@@ -942,14 +995,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <picture class="absolute inset-0 w-full h-full"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="Jan Kaiser" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„Za 2 roky jsem na 120k.“</div>
+            <div class="font-hand text-2xl text-sun-300">„Za 5 měsíců jsem na 120k.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
                 <div class="font-bold">Jan Kaiser</div>
-                <div class="text-[12px] text-white/70">B2B obchodník · 2 roky</div>
+                <div class="text-[12px] text-white/70">B2B obchodník · 5 měsíců</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Po 2 letech</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Za 5 měsíců</div>
                 <div class="tabular font-extrabold text-lime2-300">120k / měs</div>
               </div>
             </div>
@@ -963,15 +1016,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <picture class="absolute inset-0 w-full h-full"><source srcset="media/justin-funck.avif" type="image/avif"/><source srcset="media/justin-funck.webp" type="image/webp"/><img src="media/justin-funck.webp" alt="Justin Funck" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„Nevěřil, že to půjde takhle rychle.“</div>
+            <div class="font-hand text-2xl text-sun-300">„První měsíc — 70k.<br/>Nevěřil jsem vlastním očím.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
                 <div class="font-bold">Justin Funck</div>
-                <div class="text-[12px] text-white/70">OZ · Praha · 1. rok</div>
+                <div class="text-[12px] text-white/70">OZ · Praha · 1. měsíc</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Po 1 roce</div>
-                <div class="tabular font-extrabold text-lime2-300">65k / měs</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">1. měsíc</div>
+                <div class="tabular font-extrabold text-lime2-300">70k / měs</div>
               </div>
             </div>
           </div>
@@ -984,15 +1037,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <picture class="absolute inset-0 w-full h-full"><source srcset="media/josef-dreser.avif" type="image/avif"/><source srcset="media/josef-dreser.webp" type="image/webp"/><img src="media/josef-dreser.webp" alt="Josef Drešer" class="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" decoding="async"/></picture>
           </div>
           <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-ink-900/90 via-ink-900/50 to-transparent text-white">
-            <div class="font-hand text-2xl text-sun-300">„Lidi a kultura — to je náš základ.“</div>
+            <div class="font-hand text-2xl text-sun-300">„Díky portfoliu produktů téměř na každé schůzce něco podepíšu.“</div>
             <div class="mt-3 flex items-end justify-between">
               <div>
                 <div class="font-bold">Josef Drešer</div>
-                <div class="text-[12px] text-white/70">HR manažer</div>
+                <div class="text-[12px] text-white/70">Obchodní zástupce · Brno</div>
               </div>
               <div class="text-right">
-                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Tým v ČR</div>
-                <div class="tabular font-extrabold text-lime2-300">100+</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-white/60">Průměrně / měs</div>
+                <div class="tabular font-extrabold text-lime2-300">85k+</div>
               </div>
             </div>
           </div>
@@ -1031,19 +1084,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="lg:col-span-5 reveal">
         <div class="eyebrow text-slate2-500 mb-4">· Stabilita</div>
         <h2 class="h-tight text-[40px] md:text-[56px] font-extrabold text-slate2-900">Stabilní skupina.<br/>Lokální zázemí.</h2>
-        <p class="mt-5 text-slate2-600 text-[17px] leading-relaxed max-w-[480px]">Pobočky po celé ČR i SR. Nepřicházíš do startupu — přicházíš do rozjeté mašiny, která má servis tam, kde ho klient potřebuje.</p>
-        <div class="mt-8 grid grid-cols-3 gap-4">
-          <div>
-            <div class="tabular text-4xl font-extrabold text-slate2-900">15</div>
-            <div class="text-xs text-slate2-500 mt-1">let na trhu</div>
-          </div>
-          <div>
-            <div class="tabular text-4xl font-extrabold text-slate2-900">23k+</div>
-            <div class="text-xs text-slate2-500 mt-1">realizací</div>
-          </div>
-          <div>
-            <div class="tabular text-4xl font-extrabold text-slate2-900">12</div>
-            <div class="text-xs text-slate2-500 mt-1">poboček</div>
+        <p class="mt-5 text-slate2-600 text-[17px] leading-relaxed max-w-[480px]">Týmy po celé ČR i Německu. Nepřicházíš do startupu — přicházíš do rozjeté mašiny, která má servis tam, kde ho klient potřebuje.</p>
+        <div class="mt-10 rounded-2xl bg-white border border-line shadow-card overflow-hidden max-w-[520px]">
+          <div class="grid grid-cols-3 divide-x divide-line">
+            <div class="px-4 py-6 md:px-6 md:py-7 text-center">
+              <div class="tabular text-[44px] md:text-[52px] font-extrabold text-slate2-900 leading-none tracking-tight">15</div>
+              <div class="text-[10px] md:text-[11px] uppercase tracking-[.18em] text-slate2-500 mt-2.5 font-semibold">let na trhu</div>
+            </div>
+            <div class="px-4 py-6 md:px-6 md:py-7 text-center">
+              <div class="tabular text-[44px] md:text-[52px] font-extrabold text-slate2-900 leading-none tracking-tight">23k<span class="text-brand text-[36px] md:text-[42px] align-top ml-0.5">+</span></div>
+              <div class="text-[10px] md:text-[11px] uppercase tracking-[.18em] text-slate2-500 mt-2.5 font-semibold">realizací</div>
+            </div>
+            <div class="px-4 py-6 md:px-6 md:py-7 text-center">
+              <div class="tabular text-[44px] md:text-[52px] font-extrabold text-slate2-900 leading-none tracking-tight">33</div>
+              <div class="text-[10px] md:text-[11px] uppercase tracking-[.18em] text-slate2-500 mt-2.5 font-semibold">týmů</div>
+            </div>
           </div>
         </div>
         <button data-open-modal class="mt-10 btn-primary rounded-full pl-6 pr-2 py-2 text-[15px] font-semibold inline-flex items-center gap-3 glow-red">
@@ -1057,64 +1112,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="relative rounded-3xl bg-white border border-line shadow-card p-6 md:p-8">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
-              <span class="chip bg-slate-100 text-slate2-600"><span class="dot bg-brand"></span> ČR · 9 poboček</span>
-              <span class="chip bg-slate-100 text-slate2-600"><span class="dot bg-lime2-500"></span> SR · 3 pobočky</span>
+              <span class="chip bg-slate-100 text-slate2-600"><span class="dot bg-brand"></span> ČR · 24 týmů</span>
+              <span class="chip bg-slate-100 text-slate2-600"><span class="dot" style="background:#F7D52C"></span> DE · 9 týmů</span>
             </div>
           </div>
-          <svg viewBox="0 0 340 170" class="w-full" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+          <svg viewBox="0 0 647 608" class="w-full max-w-[520px] mx-auto block" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
             <defs>
               <filter id="mapShadowV2" x="-10%" y="-10%" width="120%" height="130%">
-                <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.10"/>
+                <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.12"/>
               </filter>
               <linearGradient id="czFill" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#fff3f3"/>
                 <stop offset="100%" stop-color="#ffe0e2"/>
               </linearGradient>
-              <linearGradient id="skFill" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#fefce8"/>
+              <linearGradient id="deFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fffbeb"/>
                 <stop offset="100%" stop-color="#fef08a" stop-opacity="0.7"/>
               </linearGradient>
+              <mask id="deMask" fill="white">
+                <path d="M161.624 591.505L169.874 581.757L181.017 592.041L194.197 608L204.375 600.394L212.195 584.864L227.944 595.683L248.73 599.326L275.196 586.365L294.695 585.72L304.337 575.651L316.982 585.505L321.482 579.72H329.411L335.089 591.826L345.587 594.609L347.088 580.256L340.66 576.828L341.731 561.834L331.124 546.089L366.481 527.237L371.412 513.314L388.017 508.921L389.7 495.013L385.234 490.069L366.591 479.785L349.235 453.436L334.447 448.937L319.019 419.375L326.412 405.557L308.411 385.634L302.304 373.102L306.159 366.677L312.587 378.243L320.301 370.531L336.051 363.139L358.552 361.212L375.909 346.429L421.232 328.113L412.877 322.328L413.843 315.581L423.805 313.975L431.84 322.652L434.734 331.971L444.375 331.326L450 318.149L449.034 282.161L437.465 278.948L436.34 264.648L428.464 255.167L434.892 248.097L444.375 236.368L435.858 229.459L431.199 217.09L423.805 213.232L434.251 200.38L431.84 190.741L414.642 177.727L408.214 172.262L409.983 163.747L419.788 151.857L424.126 138.68L425.091 133.057L415.45 119.078L415.77 103.333L401.545 97.9519L398.01 89.9193L405.887 80.6009L400.824 72.7267L395.038 66.5419L386.52 68.469L379.688 72.4061L373.902 66.5419L378.402 58.9092H383.302L388.927 63.6494L393.589 60.2743L393.189 53.4447L386.841 52.8829L385.154 41.2337L379.688 35.4488L376.795 27.899L371.25 26.3717L367.232 31.674L362.973 38.0207L363.777 42.8403L366.508 45.25L366.187 50.0696L361.287 51.4348L356.624 44.526L346.337 44.9257L334.285 41.3092L328.819 53.0374L319.898 61.1492L313.066 68.9404L289.282 72.474L281.405 80.8271L255.852 78.7378L266.701 64.9995L274.898 50.3788L279.398 45.8799L272.246 32.2207L264.049 36.5575L262.442 46.7622L254.89 49.8132L240.427 40.653L226.926 37.7605L225.56 23.5395L221.06 11.649L203.783 4.01628L191.73 10.6045L179.998 3.05462L162.48 0L159.749 7.87421L142.23 13.8175L144.479 24.1014L150.907 26.6733L151.39 15.9105L157.176 20.7301L151.231 32.7789L154.445 35.9919L161.518 32.4583L158.787 39.0465L150.59 41.1357L148.983 50.1337L157.018 53.6673L160.873 60.4138L165.053 63.3064L170.357 65.075L169.07 70.86L162.159 69.7361L162.642 76.6449L167.784 81.785L166.98 86.1218L161.839 84.8358L156.535 75.6794L149.141 78.8925L144.158 87.8904L142.23 97.0468L146.248 105.242L143.355 113.595L139.499 111.023L137.251 101.384L133.875 96.2435L130.498 103.956C130.498 103.956 134.837 115.363 134.195 115.363C133.554 115.363 125.195 116.649 125.195 116.649L120.053 110.706L122.946 106.69L126.643 109.099L127.447 99.136L125.678 91.1034L115.715 84.998L87.5887 86.4423L74.8912 101.384L71.1944 110.864L78.9087 118.897L82.1228 127.574L78.4259 147.98L71.1944 160.674L70.2287 170.958L56.0864 165.173L47.8892 173.688L53.5137 183.169L70.87 184.134L68.7801 201.647L54.155 211.769L52.2273 223.015L42.906 228.479L25.5497 229.444L11.8903 222.536L7.23145 230.73L16.715 247.923L17.6808 266.56L8.1972 274.593L12.2147 283.591L1.76918 288.893L3.85909 306.406L1.76918 316.045L16.0738 338.861L15.2702 351.875L1.76918 363.12L0 376.455L21.6983 390.435L12.0563 408.11L4.66252 411.968L16.2322 419.36L20.4119 438.641L27.4811 438.962L33.2678 434.142L45.3203 445.55L59.3042 442.495L68.9461 455.348L97.5551 464.346L86.1439 481.538L73.288 492.463L71.0397 507.246L56.8974 535.847L61.5562 537.291L56.8974 547.733L52.0764 556.086L55.6111 568.939L66.2188 566.691L74.5744 573.762L86.6268 570.711L96.9139 574.565L100.29 559.303L110.094 556.573L125.685 569.267L143.204 571.356L154.777 578.427L161.635 591.494L161.624 591.505Z"/>
+              </mask>
             </defs>
 
             <!-- country outlines (user-supplied paths) -->
-            <g filter="url(#mapShadowV2)" transform="translate(15, 8)">
+            <g filter="url(#mapShadowV2)">
+              <!-- Germany -->
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M161.624 591.505L169.874 581.757L181.017 592.041L194.197 608L204.375 600.394L212.195 584.864L227.944 595.683L248.73 599.326L275.196 586.365L294.695 585.72L304.337 575.651L316.982 585.505L321.482 579.72H329.411L335.089 591.826L345.587 594.609L347.088 580.256L340.66 576.828L341.731 561.834L331.124 546.089L366.481 527.237L371.412 513.314L388.017 508.921L389.7 495.013L385.234 490.069L366.591 479.785L349.235 453.436L334.447 448.937L319.019 419.375L326.412 405.557L308.411 385.634L302.304 373.102L306.159 366.677L312.587 378.243L320.301 370.531L336.051 363.139L358.552 361.212L375.909 346.429L421.232 328.113L412.877 322.328L413.843 315.581L423.805 313.975L431.84 322.652L434.734 331.971L444.375 331.326L450 318.149L449.034 282.161L437.465 278.948L436.34 264.648L428.464 255.167L434.892 248.097L444.375 236.368L435.858 229.459L431.199 217.09L423.805 213.232L434.251 200.38L431.84 190.741L414.642 177.727L408.214 172.262L409.983 163.747L419.788 151.857L424.126 138.68L425.091 133.057L415.45 119.078L415.77 103.333L401.545 97.9519L398.01 89.9193L405.887 80.6009L400.824 72.7267L395.038 66.5419L386.52 68.469L379.688 72.4061L373.902 66.5419L378.402 58.9092H383.302L388.927 63.6494L393.589 60.2743L393.189 53.4447L386.841 52.8829L385.154 41.2337L379.688 35.4488L376.795 27.899L371.25 26.3717L367.232 31.674L362.973 38.0207L363.777 42.8403L366.508 45.25L366.187 50.0696L361.287 51.4348L356.624 44.526L346.337 44.9257L334.285 41.3092L328.819 53.0374L319.898 61.1492L313.066 68.9404L289.282 72.474L281.405 80.8271L255.852 78.7378L266.701 64.9995L274.898 50.3788L279.398 45.8799L272.246 32.2207L264.049 36.5575L262.442 46.7622L254.89 49.8132L240.427 40.653L226.926 37.7605L225.56 23.5395L221.06 11.649L203.783 4.01628L191.73 10.6045L179.998 3.05462L162.48 0L159.749 7.87421L142.23 13.8175L144.479 24.1014L150.907 26.6733L151.39 15.9105L157.176 20.7301L151.231 32.7789L154.445 35.9919L161.518 32.4583L158.787 39.0465L150.59 41.1357L148.983 50.1337L157.018 53.6673L160.873 60.4138L165.053 63.3064L170.357 65.075L169.07 70.86L162.159 69.7361L162.642 76.6449L167.784 81.785L166.98 86.1218L161.839 84.8358L156.535 75.6794L149.141 78.8925L144.158 87.8904L142.23 97.0468L146.248 105.242L143.355 113.595L139.499 111.023L137.251 101.384L133.875 96.2435L130.498 103.956C130.498 103.956 134.837 115.363 134.195 115.363C133.554 115.363 125.195 116.649 125.195 116.649L120.053 110.706L122.946 106.69L126.643 109.099L127.447 99.136L125.678 91.1034L115.715 84.998L87.5887 86.4423L74.8912 101.384L71.1944 110.864L78.9087 118.897L82.1228 127.574L78.4259 147.98L71.1944 160.674L70.2287 170.958L56.0864 165.173L47.8892 173.688L53.5137 183.169L70.87 184.134L68.7801 201.647L54.155 211.769L52.2273 223.015L42.906 228.479L25.5497 229.444L11.8903 222.536L7.23145 230.73L16.715 247.923L17.6808 266.56L8.1972 274.593L12.2147 283.591L1.76918 288.893L3.85909 306.406L1.76918 316.045L16.0738 338.861L15.2702 351.875L1.76918 363.12L0 376.455L21.6983 390.435L12.0563 408.11L4.66252 411.968L16.2322 419.36L20.4119 438.641L27.4811 438.962L33.2678 434.142L45.3203 445.55L59.3042 442.495L68.9461 455.348L97.5551 464.346L86.1439 481.538L73.288 492.463L71.0397 507.246L56.8974 535.847L61.5562 537.291L56.8974 547.733L52.0764 556.086L55.6111 568.939L66.2188 566.691L74.5744 573.762L86.6268 570.711L96.9139 574.565L100.29 559.303L110.094 556.573L125.685 569.267L143.204 571.356L154.777 578.427L161.635 591.494L161.624 591.505Z" fill="url(#deFill)" stroke="#F7D52C" stroke-width="4" mask="url(#deMask)"/>
               <!-- Czech Republic -->
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M196.283 68.4156L195.878 66.5341L195.753 66.1336L195.419 65.3589L195.289 64.932L195.097 63.4088L194.977 63.0612L194.55 62.7395L194.108 62.8187L193.666 63.0136L193.249 63.0505L192.89 62.8343L192.333 62.165L191.964 61.8593L191.558 61.7382L190.684 61.6591L190.304 61.3903L190.127 61.0583L189.841 59.7672L189.169 58.3757L188.675 57.0268L188.664 55.8356L189.445 54.9187L188.69 54.5076L188.565 53.9647L188.633 53.2794L188.456 52.4734L188.035 52.2149L186.916 52.9371H186.255L184.147 51.7618L183.049 51.3666L181.904 51.5087H181.967L182.019 51.5353L182.055 51.5879L182.086 51.667L181.29 52.3679L180.879 52.4521L180.317 51.9831L180.156 51.6827L179.958 50.9924L179.838 50.7499L179.5 50.4971L178.834 50.3547L178.501 50.2017L177.606 49.4219L177.174 49.1794L175.363 48.8315L174.993 48.3994L175.181 47.5773L173.526 46.4809L173.125 46.3808L172.651 46.2597L172.776 47.2716L172.927 47.3348L173.151 47.2663H173.395L173.593 47.5827L173.645 48.0251L173.5 48.2201L172.573 48.4995L171.434 48.5364L170.918 48.6735L170.08 49.427L169.05 49.7433L168.015 49.522L166.177 47.6722L165.86 47.2241L165.636 46.6918L165.475 46.1386L165.282 45.643L164.97 45.2637L164.704 44.9949L164.616 44.7365L164.71 44.4943L164.975 44.2674L164.986 44.2358V44.1989V44.157L164.975 44.1147L164.575 44.0305L163.804 43.6404L163.43 43.5402L163.128 43.6141L162.888 43.7511L162.602 43.8037L162.16 43.5981L160.781 41.8327L160.723 41.506L160.932 41.0527L161.244 40.8946L162.612 40.842L163.367 40.5417L164.575 39.8089L165.147 39.3032L165.412 38.6232L164.975 37.7959L164.678 37.4955L164.611 37.0421L164.668 36.631L164.975 35.793L165.043 35.6509L165.064 35.5192L165.048 35.3978L164.975 35.2977L164.455 34.5861L164.299 34.4334L163.815 34.2541L163.627 34.3755L163.554 34.6812L163.398 35.0448L162.555 36.2251L162.066 36.631L161.41 36.8049L158.871 36.3465L157.518 36.4729L156.685 37.4955L156.539 37.5956L156.388 37.6272L156.237 37.5903L156.092 37.4955L155.826 36.6626L155.207 36.1566L154.577 36.2042L154.27 37.0265L153.89 36.7364L153.693 36.2727L153.635 35.7035L153.672 35.1184L153.542 35.0026L153.422 34.8709L153.323 34.7179L153.245 34.5492L153.766 34.3386L153.177 34.0855L151.845 34.1224L151.169 33.9275L150.169 33.2898L149.889 32.9841L149.717 32.5942L149.54 32.0144L149.441 31.5243L149.503 31.3976L149.17 31.2975L148.306 31.4768H147.916L147.552 31.2765L146.891 30.7127L146.578 30.523L143.664 29.6954L143.009 29.7746L142.587 29.5214L141.786 29.0367L141.14 28.9523L140.37 29.4266V30.054L141.281 31.4136L141.603 32.2356L141.817 33.1949L142.098 34.0645L142.629 34.6177L143.321 35.0289L143.836 35.6034L144.138 36.4097L144.18 37.5005L144.549 37.9962L144.606 38.5863L144.424 38.9659L144.081 38.8341L143.779 38.3754L143.648 38.1066L143.477 37.9908H143.06L142.983 38.1066V38.6495L142.92 38.8129L142.665 38.8341L142.139 38.6442L141.89 38.6548L141.551 38.892L141.078 39.556L140.812 39.7985L140.495 39.8827L140.152 39.9725L139.584 39.9356L139.022 40.0197L138.382 40.5733L137.872 41.353L137.565 41.9591L137.222 42.4548L136.592 42.9185L135.717 44.1254L134.567 44.2096L133.375 43.5825L132.397 42.6707L131.898 42.0067L131.632 41.4481L131.31 39.9196L131.003 39.071L130.144 38.1648L129.785 37.5059L129.373 36.942L128.65 35.614L128.244 35.0342L127.615 34.5861L126.35 34.1171L125.845 33.4374L125.772 33.0473L125.793 32.6364L125.772 32.2199L125.575 31.8035L125.304 31.7193H124.013L123.68 31.83L123.477 32.009L123.269 32.0566L122.905 31.7615L122.769 31.5031L122.405 30.3437L121.484 30.1804L121.219 29.374L121.442 28.6625L122.01 28.7943L121.958 28.6573L121.822 28.1566L121.994 28.1408L122.254 27.9721L122.411 27.9089L122.848 27.54L123.347 27.2396L123.774 26.8707L123.993 26.291L124.44 26.1434L125.351 26.4016L125.835 26.291L126.1 25.9115L126.683 25.3265L126.928 24.984L126.85 25.0103V24.7468L126.886 24.399L126.933 24.1671L127.058 23.9036L127.136 23.7771V23.6243L127.027 23.2817L127.922 22.9128L127.662 22.0537L125.247 19.4608L124.378 18.9601L123.451 18.7177L122.421 18.6966L122.056 18.7757L121.848 19.2289L121.64 19.8086L121.297 20.2513L120.818 20.362L120.386 20.1565L119.491 19.4608L118.294 19.3396L116.535 21.0682L115.328 21.2895L115.27 21.1525L115.249 21.0102L115.275 20.8679L115.328 20.7204L115.739 20.3831L115.801 19.8455L115.645 19.2236L115.4 18.6123L115.031 17.9008L114.651 17.5266L114.183 17.4581L112.502 18.1011L111.716 18.1222L111.534 18.0589L110.097 15.5872L110.009 15.3132L109.947 15.0022L109.244 14.9337L106.886 15.5134L106.59 15.4185L106.382 15.213L106.007 14.6333L105.684 14.412L100.007 12.3988L98.8252 12.4989L98.5598 12.8309L98.2892 13.3158L97.9771 13.6478L97.9301 13.632L97.5762 13.516L97.3941 13.1418L97.42 12.7097L97.4983 12.2564L97.4878 11.8137L97.1494 10.96L96.7176 10.5964L96.2023 10.3645L95.6351 9.90596L95.3332 9.41582L95.0001 8.66219L94.7347 7.86112L94.6515 7.21288L94.8492 6.37491L95.0938 5.90061L95.1251 5.46317L94.6723 4.72008L93.9179 4.34062L92.3046 4.31427L92.0389 3.64497L91.909 2.95457L91.5759 2.78593L91.2115 3.04943L90.9566 3.64497L90.8629 4.11401L90.5403 4.18254L90.1395 3.98225L89.8064 3.65024L89.567 3.197L88.1306 2.87552L87.5894 2.37485L87.5114 2.74904L87.3812 2.95984L86.9701 3.26551L86.809 3.3024L86.6475 3.38146L86.5019 3.50267L86.3717 3.65551L86.4913 4.17199L86.9547 4.54091L87.3864 5.17858L87.4177 6.50142L87.3292 6.73329L87.0484 7.04951L86.9701 7.20762L86.9441 7.46057L86.9599 7.63449L86.9909 7.76625L87.0274 9.34204L86.9701 9.73202L83.7281 9.48961L82.7028 9.77946L82.099 9.75839L81.6515 10.9758L81.3808 11.5028L81.1052 11.8243L80.6472 11.9508L80.0329 11.9297L78.9819 11.6925L77.8941 10.8599L77.4883 10.6332L76.4995 10.3539L76.364 10.0166L76.463 9.20502L76.9418 8.06138L77.1082 7.45531L76.9573 6.93883H76.6139L75.0424 7.59234L74.7145 7.32884L74.8704 6.77546L75.2088 6.12196L75.4275 5.57384L75.4794 4.88874L75.391 4.44604L75.1723 4.08238L74.829 3.66078L74.4801 3.38146L73.7152 3.18646L73.3666 2.93349L73.1012 2.55931L73.0023 2.28526L72.9398 2.01121L72.7784 1.62649L72.534 2.25891L72.2111 2.42755L71.1808 2.36958L70.3847 2.72795L70.0723 2.71741L69.7652 2.54877L69.578 2.30107L69.4271 2.0481L69.2137 1.84783L68.1572 1.5L67.2515 1.64757L66.5698 2.3485L66.1693 3.66078L65.8517 4.12456L66.1848 4.34591L67.1424 4.47238L67.7096 4.70428L67.6679 4.79386L67.4287 4.96252L67.4025 5.44211L68.1259 6.1694L69.172 6.48033L69.9266 6.92303L69.755 8.05612L68.9221 8.77287L66.6948 8.59367L65.6747 8.80976L65.3679 9.11541L64.8474 9.91122L64.5037 10.238L60.0805 12.2933L59.534 12.3302L58.4984 12.1932L57.9414 12.3144L57.6343 12.5358L57.2025 13.105L56.9111 13.3263L56.552 13.379L56.2761 13.2947L56.0367 13.3052L55.7766 13.632L55.6569 14.0694L55.6931 14.4541L55.7609 14.7703L55.7454 15.0075L55.5527 15.2868L55.3863 15.3448H55.2143L54.3922 15.8718L53.8822 15.9772L52.5813 15.8296L51.967 15.8929L50.8897 16.2987L50.3435 16.4094L47.7934 16.3936L46.5079 16.6413L45.3474 17.3527L45.6753 18.0484L45.5661 18.6597L45.186 19.1551L44.7177 19.5188L44.8792 19.8824L44.8529 20.1565L44.6812 20.3673L44.4004 20.5254L43.9058 21.1473L43.427 21.5952L42.9015 21.727L42.2665 21.4108L42.0791 21.1736L41.6786 20.4938L41.5276 20.3198L41.184 20.1934L41.1061 20.2513L41.0903 20.4147L40.9186 20.5992L39.8519 21.3633L39.6957 21.6479L39.3938 22.5649L38.8006 22.8706L38.327 22.6598L37.8637 22.333L37.3122 22.2804L36.3651 24.8364L35.9591 25.5848L35.2619 26.1118L33.7683 26.0222L32.9666 26.3015H32.9616L32.7012 26.3753L32.4358 26.3964L32.1705 26.3753L31.9206 26.3015L31.7022 26.1329L31.4679 26.0802L31.2285 26.1381L30.9943 26.3015L30.8122 28.1355L30.6301 28.9523L30.2294 29.4319L29.61 30.0487L29.3811 30.2805L28.4079 30.2226L25.7798 28.6046L25.5404 28.5308L25.2854 28.5835L24.8847 28.8523L24.7077 28.9207L24.2029 28.847L23.7502 28.8786L23.287 29.0474L22.9227 29.411L22.2982 30.3963L21.9807 30.7073L21.6113 30.7496L20.0969 30.4702L17.9736 30.6335L16.8287 30.9761L16.0428 31.6614L15.8295 31.8457L15.7306 32.0672L15.6733 32.2938L15.5953 32.494V32.5888L15.6421 32.7416L15.6577 32.9155L15.5953 33.0789L15.4808 33.1421L15.2258 33.1317L15.1217 33.1896L14.7834 33.4953L13.9508 33.9697L13.6489 34.2754L12.7694 35.8931L12.4468 36.2358L12.1293 36.4623L11.8951 36.8103L11.8171 37.5218L11.255 38.249L11.1041 38.6705L11.0156 39.4665L11.0989 40.0197L11.2654 40.4994V40.8999L10.8699 41.1897L10.3859 41.1265L10.0997 40.6734L9.76142 39.4399L9.73018 39.2081L9.67816 38.9446L9.55846 38.6548L9.43357 38.4862L8.93916 37.9802L8.86632 37.8748L8.83508 37.7746L8.86109 37.6851L8.93916 37.6007L8.97559 37.5691L9.01203 37.5428L9.04846 37.5322H9.09009L9.21499 37.274L9.2306 37.0684L9.13692 36.9051L8.93396 36.7893L8.11692 36.768L7.70577 36.6363L7.38834 36.3572L7.27904 36.0039L7.28946 35.2345L7.1229 34.818L6.57648 34.4281L5.21299 34.328L4.50002 34.2754L5.15575 34.9657L5.38473 35.3662L5.48881 36.0039L5.43677 36.5784L5.24422 36.784L4.95278 36.9789L4.5937 37.5218L4.88513 38.0541L6.28505 38.9393L6.97719 39.714L7.29985 40.2147L7.51843 40.7469L7.60169 41.4216L7.40393 42.4388L7.41955 43.1081L7.66934 43.7827L8.07006 44.157L8.52284 44.4204L8.93396 44.7787L9.18375 45.2215L9.241 45.6799V46.0857L9.33988 46.3705L13.6333 48.6997H13.6645L14.0965 49.1319L15.1425 49.2426L15.6213 49.7011L15.6941 50.3547L15.4964 50.9555L15.4652 51.4402L16.6257 52.1308L17.0316 52.2888L17.2085 52.6101L17.1201 53.4747L16.8911 54.1543L16.2354 55.3771L16.0272 56.0621L15.4548 55.8884L15.283 56.5155L15.2674 57.443L15.1789 58.1704L14.7262 58.6342L13.55 59.1401L13.2118 59.8095L13.3523 60.2785L13.6437 60.8477L14.2318 61.7013L14.6377 62.0755L15.0697 62.3759L16.0168 62.8343L16.4071 63.0452L16.6413 63.5143L16.6621 64.1044L16.4227 64.6473L16.4956 64.7055L16.7194 64.816L16.5841 65.1639L16.5632 65.2694L16.8547 65.6276L17.5312 66.0072L17.8279 66.3392L18.0256 66.8186L18.1557 67.7989L18.2702 68.3155L18.4524 68.8424L18.6293 69.2376L18.8531 69.5696L19.1601 69.8966L19.4828 69.9914L19.7794 69.9492L19.9928 70.1232L20.0292 70.8663L20.1125 72.3154L20.253 73.0322L20.5756 73.6699L21.1273 74.1337L22.4335 74.7607L23.006 75.3618L23.9375 77.4699L24.3851 77.9389L24.9471 78.1442L26.6177 78.392L27.1485 78.3182L27.0236 77.7543L27.4139 77.6279L28.5016 77.9283L28.9803 78.1917L29.3915 78.5291L30.1877 79.383L30.6821 79.5883L30.8382 79.9468L30.8747 80.3736L31.0048 80.7848L31.9103 81.8756L31.9156 81.8809L32.2642 82.0812L34.9235 85.7387L35.2931 86.5977L35.7456 87.3355L36.5473 87.8098L38.2645 87.889L38.8318 88.1102L39.1754 88.4159L40.0393 89.5859L41.2465 90.8297L41.5641 91.5938L41.5796 92.8217L41.9854 93.491L42.8025 94.2657L43.6977 94.9194L44.3586 95.2407L44.65 94.4819L44.9206 94.0023L45.3162 93.8232L45.4984 93.8599L45.9667 93.96L46.4662 94.271L46.9502 94.6612L47.4343 94.93L47.9495 94.8718L48.0223 95.6941L48.3241 96.4898L48.7664 97.1698L49.2505 97.6598L49.7865 97.918L50.843 98.0866L51.2436 98.3135L51.9045 99.3567L53.2732 102.124L53.825 102.704L54.9647 103.014L55.506 103.315L56.021 103.726L56.6405 104.247L58.5504 105.312L58.8 105.586L59.2738 106.319L59.4557 106.677L59.6017 106.814L59.7993 106.893L59.971 107.014L60.044 107.278L59.992 107.547L59.8618 107.589L59.7264 107.563L59.6379 107.626L59.4455 108.032L59.284 108.09L59.2321 108.216L59.3623 108.806L59.487 109.043L59.9762 109.66L60.2156 109.876L61.1785 110.287L65.2012 110.746L68.0167 111.752L68.2874 111.721L68.511 111.631L69.0835 111.167L70.5564 110.524L71.0039 110.055L71.6389 108.342L72.0499 108.053L72.7317 108.864L73.8609 109.465L74.194 109.549L74.6208 109.454L75.4742 109.038L75.9112 109.001L76.0934 109.165L76.1299 109.439V109.729L76.2236 109.913L76.4423 109.939L76.8741 109.786L77.0615 109.829L77.3686 110.24L77.535 110.646L77.7589 110.93L78.2272 110.962L78.6695 110.514L78.7997 110.382L78.9402 109.254L78.9247 107.932L79.0286 106.762L79.5646 105.881L81.0582 104.553L81.1987 103.72L81.4851 103.209L81.5995 102.682L81.7659 102.271L82.1927 102.102L83.6758 102.308L85.1434 102.919L85.7212 102.867L86.049 102.102L85.9866 102.024L85.8616 101.744L85.7367 101.397L85.6794 101.122L85.7264 100.817L85.9293 100.269L86.5331 97.5387V96.3371L86.4186 95.0036L86.4289 93.7598L86.8139 92.8376L86.788 92.6004V92.3949L86.8297 92.2475L86.9182 92.1736L87.5426 92.0945L89.1194 92.6427L91.326 92.827L91.5341 93.4437L91.6538 94.0392L91.6436 94.6346L91.4562 95.2567L92.0182 95.267L94.1832 94.6769L94.3342 94.5821L94.7245 94.1024L94.8179 93.8705L94.8909 93.2857L95.0054 93.1064H95.224L95.3697 93.2857L95.4841 93.5016L95.6246 93.6017L96.9518 93.6177L97.5867 93.802L98.9501 94.5029L100.21 94.935L100.819 95.2883L102.218 96.5215L102.869 96.7796L104.56 97.4439L106.761 98.7033L107.396 98.8561H108.052L108.531 98.7033L109.54 98.1605L109.785 98.1026H110.654L110.816 98.2237L110.93 98.7559L111.071 98.9774L111.263 99.0616L111.804 99.1039L112.117 99.3357L112.33 99.4359L112.569 99.4202L112.278 99.8101L112.637 99.7256L112.954 99.7363L113.168 99.9312L113.199 100.39L113.678 100.263L113.829 100.448V100.748L113.87 100.964L116.722 103.067L118.226 103.731L120.849 103.573L124.82 104.169L124.851 104.137L125.439 104.047L125.814 104.358L125.97 104.411L126.418 104.279L126.73 103.984L128.172 101.486L128.666 101.154L129.483 101.275L129.774 101.259L130.29 101.038L130.55 101.001L130.81 101.091L131.294 101.407L132.99 101.908L133.516 101.971L134.057 102.192L134.281 102.714L134.385 103.336L134.593 103.852L134.968 104.116L135.421 104.195L136.498 104.153L136.93 104.306L137.955 104.996L138.476 105.191L139.022 105.122L140.115 104.732L140.578 104.769L141.25 105.723L141.645 108.596L142.623 109.75L142.696 108.928L143.144 108.374L143.467 107.768L144.903 103.583L145.6 102.382L146.578 101.528L146.985 101.006L147.151 100.184L147.411 99.7785L148.936 98.6508L150.206 98.3767L151.569 98.7403L154.806 100.4L155.301 100.305L155.852 99.9365L156.373 99.5889L157.049 99.3886L157.466 99.5889L158.335 100.516L159.37 100.68L164.824 98.5084L165.324 98.0866L166.302 96.3791L166.76 95.9945L167.458 95.8731L168.056 95.9786L168.597 95.947L169.118 95.4306L169.352 94.8349L169.57 93.4859L169.748 92.8376L170.122 92.0735L170.715 91.6833L171.402 91.5728L172.927 91.6939L173.869 91.2565L174.707 90.4714L175.295 89.4595L175.483 88.5001L175.446 86.5451V86.2816L175.545 85.1063L175.904 83.6676L176.435 82.329L177.117 81.201L177.954 80.3999L181.774 78.8927L182.826 78.06L183.497 77.5277L183.57 75.4354L184.397 75.6253L185.032 75.2035L186.239 73.7069L187.171 73.2009L187.405 72.9584L187.551 72.5685L187.618 71.7462L187.769 71.3826L188.352 71.0084L189.607 71.193L190.418 70.7608L190.616 70.7186L190.814 70.7608L191.745 71.2352L192.567 71.4881L193.364 71.4408L194.53 70.355L195.06 70.1494L196.221 70.1178L196.341 69.38L196.263 68.4579L196.283 68.4156Z" fill="url(#czFill)" stroke="#E30A1A" stroke-width="1.2" stroke-linejoin="round"/>
-              <!-- Slovakia -->
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M300.455 88.8271L298.233 88.7269L297.191 88.4053L295.756 86.9402L295.15 86.6977L293.586 86.7556L292.253 86.3448L292.046 86.1602L291.977 85.8861L292.054 85.6016V85.2959L291.742 84.9429L291.51 84.9007L290.827 84.9849L290.54 84.9692L290.213 84.8216L289.287 84.2208L287.278 83.8309L286.476 83.2354L286.288 81.8386L285.929 80.2891L285.113 78.9558L284.087 77.9808L282.559 77.2061L281.517 76.2364L280.997 75.936L280.425 76.0414L279.935 76.4948L279.534 76.9795L279.237 77.1798L278.8 76.8215L277.848 75.3352L277.369 74.8399L277.088 74.7557L276.646 74.8558L276.432 74.8242L276.146 74.6239L275.615 74.102L275.329 73.9071L274.798 73.77L272.768 74.0019L272.337 74.1759L271.821 74.3918L271.405 74.2654L270.354 74.4972H269.885L267.117 73.7121L265.53 72.8529L265.139 72.7581L264.624 73.1217L263.739 74.45L263.25 74.9137L262.641 75.0138L262.209 74.7134L261.804 74.255L261.288 73.8965L260.846 73.8545L259.696 74.0914L259.264 74.3023L258.686 74.9506L259.035 75.3511L259.69 75.757L260.039 76.421L259.81 76.8215L259.285 76.9269H258.686L258.239 77.0271L257.656 77.6016L256.729 78.9771L256.115 79.5147L255.449 79.7569L254.929 79.6567L254.465 79.3194L254.002 78.8294L253.471 78.4289L253.024 78.3604L252.54 78.392L251.905 78.2918L251.458 77.9598L248.939 74.9084L248.496 74.8292L247.424 75.0032L246.81 74.9084L246.55 74.9243L246.259 75.0877L245.806 75.6568L245.478 75.9676L244.807 76.2101L244.182 76.0574L241.783 74.8189L241.341 74.919V75.6778L239.878 75.7357L238.718 75.2932H238.38L238.088 75.5198L237.984 75.7939L237.927 76.1997L237.781 76.8268L237.578 77.4382L237.437 77.6332L235.247 77.8281L234.815 78.0706L234.195 78.8188L233.914 79.0823L233.29 79.0087L233.217 78.9402L233.056 79.1561L232.514 80.3893L232.353 80.9112L232.155 81.3959L231.801 81.8283L231.64 83.3618L231.349 84.458L230.792 84.8901L229.85 84.421L228.387 83.0298L227.597 82.6134L226.686 82.7135L226.171 83.0984L225.619 83.6779L225.218 84.0944L224.589 84.3315L223.282 84.2314L222.569 83.9679L222.205 83.4567L222.32 82.8769L223.392 81.1061L223.517 81.0007L223.699 80.9481L223.865 80.848L223.933 80.6002L223.881 80.4105L223.87 80.3999L223.652 80.168V80.1524L223.6 80.0522L223.209 79.7569L223.111 79.6095L223.126 79.4249L223.345 79.0982L223.392 78.9189L223.225 76.7899L223.079 76.0574L222.814 75.2247H222.809L222.554 75.0245L221.601 75.409L221.029 75.4669L220.41 75.3984L218.781 74.8345V74.8189L218.838 74.3023L218.822 73.612L218.864 73.3748L218.994 73.0954L217.86 73.0848L217.266 72.9214L216.782 72.5422L216.631 72.2258L216.173 70.824L215.658 68.5946L215.315 67.7094L214.648 67.2613L214.435 67.0294L213.957 66.1758L213.717 66.0757L213.561 66.0125L213.4 66.086L213.29 66.3075L210.829 69.0533L210.615 69.2429L210.215 69.4063L209.923 69.4538L209.049 69.4432L208.502 69.5646L208.039 69.7964L207.628 70.1969L207.238 70.824L206.785 72.2574L206.837 72.305L206.926 72.4367L206.983 72.6476L206.915 72.9427L206.79 73.0375L206.442 73.0481L206.358 73.0691L206.161 73.9281L206.088 74.4763L205.88 74.8292L205.005 75.1825L204.292 75.3248L204.001 75.3036L203.73 75.1612L203.168 74.745L202.908 74.6555L202.289 74.8029L201.191 75.4513L200.472 75.5092L199.921 75.4037L199.765 74.9084L199.879 73.459L199.806 72.8056L199.671 72.2102L199.64 71.5828L199.89 70.8397L199.067 70.334L196.257 70.0702L195.097 70.1019L194.566 70.3074L193.4 71.3932L192.604 71.4407L191.782 71.1876L190.85 70.7133L190.652 70.671L190.455 70.7133L189.643 71.1454L188.389 70.9611L187.806 71.3353L187.655 71.6989L187.587 72.5209L187.441 72.9111L187.207 73.1533L186.275 73.6593L185.068 75.1562L184.433 75.5777L183.606 75.3881L183.533 77.4802L182.862 78.0124L181.81 78.8453L177.991 80.3526L177.153 81.1537L176.471 82.2814L175.94 83.62L175.581 85.0587L175.477 86.234V86.4975L175.519 88.4528L175.331 89.4119L174.743 90.4238L173.905 91.2092L172.963 91.6466L171.438 91.5252L170.752 91.636L170.158 92.0259L169.784 92.79L169.607 93.4384L169.388 94.7876L169.154 95.3831L168.633 95.8997L168.092 95.9313L167.494 95.8258L166.797 95.9469L166.338 96.3318L165.36 98.0393L164.86 98.4608L159.407 100.632L158.371 100.469L157.502 99.5413L157.086 99.341L156.409 99.5413L155.889 99.8892L155.337 100.258L154.843 100.353L151.605 98.6927L150.242 98.3291L148.972 98.6032L147.448 99.7309L147.187 100.137L147.021 100.959L146.615 101.481L145.636 102.335L144.939 103.536L143.503 107.721L143.18 108.327L142.732 108.88L142.66 109.702L142.925 111.726L142.774 112.269L142.712 112.49L142.249 112.991L141.78 113.375L141.567 113.781L141.416 114.356L140.671 115.441L140.385 116.021L140.266 116.638L140.016 118.941L139.943 119.21L139.875 119.336L139.823 119.531L139.808 120.005L139.896 120.264L140.115 120.401L140.687 120.459L140.848 120.554L141.15 120.806L141.442 121.133L141.572 121.476L141.504 121.666L141.395 121.913L141.343 122.129L141.468 122.219L141.546 122.309L141.645 122.525L141.739 122.772L141.775 122.967L141.868 123.22L142.087 123.362L142.342 123.484L142.66 123.774L142.837 123.832L142.94 123.985L142.967 124.169L142.93 124.664L142.94 124.87L143.383 126.414L143.518 127.189V128.121L143.721 128.791L144.434 129.586L144.824 129.829L145.277 129.898L145.574 130.092L146.001 130.873L146.136 131.12L146.505 131.521L146.214 131.884L146.068 132.322L145.907 133.118L146.016 133.191L146.354 133.476L146.204 134.177L146.854 134.54L147.77 134.873L148.431 135.473L149.467 134.836L150.492 135.057L151.668 135.389L151.959 135.473L153.812 135.758L154.707 136.506L157.622 140.459L157.902 140.717L158.194 140.844L158.907 140.997L159.172 141.171L160.13 142.63L160.473 142.994L160.765 142.984L161.051 142.841L161.368 142.794L161.79 143.01L162.378 143.437L162.904 143.943L163.127 144.38L163.424 144.717L164.631 145.381L165.277 145.734L167.655 146.388L169.294 146.283L175.794 145.856L179.292 146.225L180.343 146.124L182.466 145.25L188.279 144.564L189.549 144.659L190.579 145.123L191.428 145.292L192.255 145.202L192.947 144.77L193.884 143.679L194.378 143.31L195.024 143.136L195.721 142.883L195.763 142.867L194.67 142.061L193.842 141.239L193.655 140.438L193.723 139.537L194.009 137.771L193.915 137.276L193.717 137.102L193.681 136.944L194.051 136.485L194.306 136.332L194.857 136.238L195.128 136L195.888 134.404L196.382 133.993L199.083 133.376L200.452 133.065L200.868 132.87L201.508 132.901L202.065 132.928L203.762 132.675L207.279 133.112L207.592 133.049L209.283 131.948L213.113 132.032L214.633 130.941L214.675 130.72L214.69 130.493L214.675 130.261L214.633 130.024L214.622 129.992V129.966V129.945L214.633 129.924L214.971 129.244L215.237 127.579L215.549 126.952L216.038 126.662L218.645 125.961L218.947 125.971L219.233 126.056L219.556 126.335L220.17 127.104L220.456 127.257L221.763 126.999L222.429 127.11L222.934 127.732L222.949 128.153L222.788 128.522L222.715 128.886L222.98 129.291L223.251 129.328L224.276 128.933L224.974 129.16L226.051 130.15L226.639 130.383L227.305 130.135L228.591 128.923L229.246 128.511L230.329 128.169L230.422 128.111L231.552 127.41L232.088 127.199L232.322 127.009L232.53 126.625L232.686 125.85L232.796 125.544L233.149 125.118L233.394 125.07L233.685 125.181L234.185 125.233L234.658 125.017L235.517 124.216L235.835 124.074L236.402 124.364L236.719 124.722L237.063 124.87L237.708 124.527L238.53 123.684L239.243 122.582L239.837 121.339L240.94 117.913L241.268 117.244L241.695 116.675L242.558 115.752L242.626 115.684L243.006 115.104L243.032 114.951L243.043 114.799V114.646L243.021 114.493L242.964 113.744L242.975 113.386L243.006 113.059L243.823 112.727L245.582 112.606L251.588 111.199H252.051L252.488 111.425L253.331 112.206L253.742 112.316L254.632 112.411L256.178 113.37L257.187 113.46L257.895 113.402L258.733 113.555L259.524 113.918L260.097 114.488L260.815 114.656L263.016 113.592L263.958 113.375L264.473 113.602L264.827 113.902L265.15 114.045L265.571 113.802L265.904 113.318L266.066 112.859L266.305 112.453L266.862 112.121L267.335 112.021L268.303 112L269.776 111.526L270.193 111.652L271.145 112.232L271.66 112.437L271.905 112.664L272.092 113.038L272.352 113.876L272.545 114.182L272.998 114.393L274.044 114.377L274.527 114.488L274.772 114.978L275.142 116.764L275.376 117.228L276.963 119.7L277.634 120.49L278.384 121.054L279.274 121.36L280.138 121.286L281.605 120.527L282.827 120.343L283.692 119.842L284.104 119.679L285.586 119.599L286.105 119.415L286.622 119.378L288.32 119.547L288.845 119.389L289.34 118.988L289.873 118.292L289.901 115.183L290.213 114.477L290.313 113.797L289.978 112.042L290.036 111.167L290.462 110.461L292.314 108.943L292.491 108.627L292.79 107.937L293.003 107.631L293.351 107.389L294.106 107.146L294.448 106.92L294.902 106.308L295.25 105.497L295.432 104.574L295.397 103.642L295.485 103.062L295.703 102.777L295.969 102.566L296.218 102.208L296.417 101.707L296.477 101.412L296.422 99.9365L296.364 99.5782L296.386 99.2409L296.571 98.7086L296.624 98.6295L296.842 98.3134L297.525 97.7283L297.79 97.3384L297.849 97.0749V96.5108L297.879 96.2949L298.233 95.5201L298.852 93.6915L299.352 93.296L300.444 93.1327L300.881 92.7534L300.87 92.0156L301 91.0089L301.21 90.0074L301.428 89.2855L300.45 88.8005L300.455 88.8271Z" fill="url(#skFill)" stroke="#F4C21F" stroke-width="1.2" stroke-linejoin="round"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M431.445 323.192L434.268 332.303L434.501 333.057L435.289 333.005L444.916 332.363L445.528 332.322L445.77 331.757L451.028 319.406L462.996 323.209L473.069 337.725L473.284 338.034L473.649 338.125L493.531 343.066L507.982 353.089L508.618 353.529L509.204 353.024L517.297 346.056L521.712 356.913L511.979 361.496L511.404 361.766V369.949L511.979 370.22L519.496 373.758L525.927 388.684L526.083 389.048L526.447 389.206L540.567 395.316L541.056 395.527L541.504 395.24L553.059 387.843L553.191 387.758L553.292 387.636L557.785 382.171L558.153 381.724L557.948 381.182L554.419 371.855L554.307 371.559L554.043 371.381L547.535 366.993L556.326 366.171L566.906 376.463L567.096 376.647L567.352 376.714L576.015 378.964L576.487 379.087L576.875 378.789L585.51 372.155L587.431 376.35L580.519 383.577L580.011 384.108L580.365 384.751L586.305 395.526L586.432 395.757L586.654 395.895L598.368 403.13L598.957 403.494L599.505 403.07L610.076 394.896L618.763 402.698L619.099 403L619.548 402.947L629.449 401.782L630.474 411.865L630.531 412.437L631.055 412.675L644.105 418.592L645.893 424.964L639.466 432.504L616.521 452.934L616.401 453.04L616.321 453.179L610.973 462.398L610.936 462.463L610.908 462.531L603.988 479.968L585.296 489.123L562.861 488.701L562.424 488.693L562.12 489.01L552.556 498.999L540.74 493.589L540.627 493.537L540.505 493.515L527.828 491.183L527.311 491.087L526.939 491.46L517.749 500.668L506.325 496.853L492.354 484.973L491.924 484.607L491.389 484.786L482.268 487.831L467.933 476.584L466.907 475.78L466.396 476.978L464.028 482.513L454.787 474.987L454.275 474.571L453.691 474.878L446.953 478.414L446.319 478.747L446.43 479.454L449.181 497.04L436.852 500.857L436.309 501.025L436.175 501.578L434.187 509.826L424.321 506.339L423.664 506.106L423.219 506.643L417.244 513.826L404.341 509.316L386.541 489.568L386.429 489.443L386.281 489.362L367.884 479.188L350.692 453.025L350.493 452.724L350.148 452.618L335.785 448.237L320.818 419.487L327.952 406.124L328.272 405.523L327.832 405.006L320.45 396.325L320.434 396.306L320.417 396.287L309.93 385.139L304.136 373.222L306.819 368.742L312.396 378.801L313.04 379.963L313.979 379.022L321.557 371.428L336.959 364.186L359.248 362.269L359.568 362.241L359.812 362.032L377.019 347.345L402.863 336.793L422.115 329.078L423.84 328.387L422.313 327.328L414.474 321.89L415.247 316.477L423.938 315.072L431.445 323.192Z" fill="url(#czFill)" stroke="#E30A1A" stroke-width="2" stroke-linejoin="round"/>
             </g>
 
+            <!-- DE country label -->
+            <text x="200" y="560" font-family="Manrope" font-size="20" font-weight="800" fill="#C89A10" letter-spacing="7" opacity="0.75" text-anchor="middle">NĚMECKO</text>
             <!-- CZ country label -->
-            <text x="75" y="148" font-family="Manrope" font-size="7" font-weight="800" fill="#E30A1A" letter-spacing="3" opacity="0.7">ČESKO</text>
-            <!-- SK country label -->
-            <text x="225" y="148" font-family="Manrope" font-size="7" font-weight="800" fill="#C89A10" letter-spacing="3" opacity="0.75">SLOVENSKO</text>
+            <text x="475" y="560" font-family="Manrope" font-size="18" font-weight="800" fill="#E30A1A" letter-spacing="6" opacity="0.75" text-anchor="middle">ČESKO</text>
 
-            <!-- CZ pins - positioned roughly on CZ path (translated by +15,+8) -->
-            <!-- CZ center circle with branch count -->
+            <!-- DE center circle with team count -->
             <g font-family="Manrope" font-weight="700" fill="#0f172a">
-              <circle cx="90" cy="65" r="22" fill="#E30A1A" fill-opacity="0.12">
-                <animate attributeName="r" values="20;28;20" dur="3s" repeatCount="indefinite"/>
-                <animate attributeName="fill-opacity" values="0.2;0.05;0.2" dur="3s" repeatCount="indefinite"/>
-              </circle>
-              <circle cx="90" cy="65" r="15" fill="#E30A1A" stroke="#fff" stroke-width="2.2"/>
-              <text x="90" y="66" font-size="15" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="middle">9</text>
-              <text x="90" y="89" font-size="7" fill="#475569" text-anchor="middle" font-weight="700">poboček</text>
-            </g>
-
-            <!-- SK center circle with branch count -->
-            <g font-family="Manrope" font-weight="700" fill="#0f172a">
-              <circle cx="232" cy="90" r="22" fill="#F4C21F" fill-opacity="0.22">
-                <animate attributeName="r" values="20;28;20" dur="3.2s" repeatCount="indefinite"/>
+              <circle cx="200" cy="290" r="52" fill="#F7D52C" fill-opacity="0.22">
+                <animate attributeName="r" values="46;62;46" dur="3.2s" repeatCount="indefinite"/>
                 <animate attributeName="fill-opacity" values="0.32;0.08;0.32" dur="3.2s" repeatCount="indefinite"/>
               </circle>
-              <circle cx="232" cy="90" r="15" fill="#F4C21F" stroke="#fff" stroke-width="2.2"/>
-              <text x="232" y="91" font-size="15" font-weight="800" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">3</text>
-              <text x="232" y="114" font-size="7" fill="#475569" text-anchor="middle" font-weight="700">pobočky</text>
+              <circle cx="200" cy="290" r="36" fill="#F7D52C" stroke="#fff" stroke-width="4.5"/>
+              <text x="200" y="292" font-size="30" font-weight="800" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">9</text>
+              <text x="200" y="350" font-size="13" fill="#475569" text-anchor="middle" font-weight="700">týmů</text>
             </g>
 
-            <!-- connector line CZ-SK -->
-            <path d="M 120,68 C 140,80 160,90 177,94" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 3" fill="none" opacity="0.7"/>
-          </svg</svg>
+            <!-- CZ center circle with team count -->
+            <g font-family="Manrope" font-weight="700" fill="#0f172a">
+              <circle cx="475" cy="415" r="52" fill="#E30A1A" fill-opacity="0.14">
+                <animate attributeName="r" values="46;62;46" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" values="0.2;0.05;0.2" dur="3s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="475" cy="415" r="36" fill="#E30A1A" stroke="#fff" stroke-width="4.5"/>
+              <text x="475" y="417" font-size="26" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="middle">24</text>
+              <text x="475" y="475" font-size="13" fill="#475569" text-anchor="middle" font-weight="700">týmů</text>
+            </g>
+
+            <!-- connector line DE-CZ -->
+            <path d="M 236,290 C 310,330 395,385 439,410" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5 6" fill="none" opacity="0.65"/>
+          </svg>
           <div class="mt-2 text-[11px] font-mono text-slate2-500">
             <span>mezinárodní skupina DOMIDOMI</span>
           </div>
@@ -1126,13 +1183,99 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <!-- POBOČKY / OFFICES -->
+  <div class="relative max-w-[1360px] mx-auto px-4 lg:px-16 pt-10 md:pt-16 pb-4 reveal" style="--i:4">
+    <div class="mb-10">
+      <div class="eyebrow text-slate2-500 mb-3">· Kde nás najdeš</div>
+      <h3 class="h-tight text-[32px] md:text-[44px] font-extrabold text-slate2-900 leading-[1.05]">Naše hlavní pobočky</h3>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+      <!-- PRAHA -->
+      <article class="group relative rounded-3xl overflow-hidden bg-white border border-line shadow-card card-lift">
+        <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+          <img data-office-photo="praha" src="media/office-praha.png" alt="Pobočka Praha — budova DOMIDOMI s.r.o." class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async"/>
+          <div class="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-ink-900/80 text-white text-[10px] font-mono tracking-[.2em] uppercase px-3 py-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full bg-lime2-400 animate-pulse"></span> HQ
+          </div>
+        </div>
+        <div class="p-6 md:p-7">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <div class="eyebrow text-slate2-400 text-[10px] mb-1.5">Centrála · Česko</div>
+              <div class="flex items-center gap-2.5">
+                <span class="grid place-items-center w-7 h-7 rounded-full bg-slate-50 ring-1 ring-black/5 overflow-hidden shrink-0" aria-hidden="true">
+                  <svg viewBox="0 0 30 20" width="18" height="12" class="rounded-[2px] block shadow-[0_0_0_1px_rgba(0,0,0,.05)]" preserveAspectRatio="xMidYMid meet">
+                    <rect width="30" height="10" fill="#fff"/>
+                    <rect y="10" width="30" height="10" fill="#D7141A"/>
+                    <path d="M0 0 L15 10 L0 20 Z" fill="#11457E"/>
+                  </svg>
+                </span>
+                <div class="text-[22px] md:text-[24px] font-extrabold text-slate2-900 leading-tight">Praha</div>
+              </div>
+            </div>
+            <div class="shrink-0 grid place-items-center w-11 h-11 rounded-full bg-brand/10 text-brand">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2 L2 11 h3 v10 h5 v-6 h4 v6 h5 V11 h3 Z" fill="currentColor"/></svg>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-slate2-700">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-slate2-400"><path d="M12 22s-7-6.5-7-12a7 7 0 1 1 14 0c0 5.5-7 12-7 12Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.7"/></svg>
+            <div class="text-[15px] leading-relaxed">
+              U nákladového nádraží 3265/10<br/>
+              <span class="text-slate2-500">130 00 Praha 3 — Strašnice</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-brand via-brand/40 to-transparent"></div>
+      </article>
+
+      <!-- NORIMBERK -->
+      <article class="group relative rounded-3xl overflow-hidden bg-white border border-line shadow-card card-lift">
+        <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+          <img data-office-photo="norimberk" src="media/office-norimberk.png" alt="Pobočka Norimberk — budova DOMIDOMI GmbH" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async"/>
+          <div class="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-ink-900/80 text-white text-[10px] font-mono tracking-[.2em] uppercase px-3 py-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full" style="background:#F7D52C"></span> DE
+          </div>
+        </div>
+        <div class="p-6 md:p-7">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <div class="eyebrow text-slate2-400 text-[10px] mb-1.5">Pobočka · Německo</div>
+              <div class="flex items-center gap-2.5">
+                <span class="grid place-items-center w-7 h-7 rounded-full bg-slate-50 ring-1 ring-black/5 overflow-hidden shrink-0" aria-hidden="true">
+                  <svg viewBox="0 0 30 20" width="18" height="12" class="rounded-[2px] block shadow-[0_0_0_1px_rgba(0,0,0,.05)]" preserveAspectRatio="xMidYMid meet">
+                    <rect width="30" height="6.67" fill="#000"/>
+                    <rect y="6.67" width="30" height="6.66" fill="#DD0000"/>
+                    <rect y="13.33" width="30" height="6.67" fill="#FFCE00"/>
+                  </svg>
+                </span>
+                <div class="text-[22px] md:text-[24px] font-extrabold text-slate2-900 leading-tight">Norimberk</div>
+              </div>
+            </div>
+            <div class="shrink-0 grid place-items-center w-11 h-11 rounded-full" style="background:rgba(247,213,44,.15);color:#a87d10">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2 L2 11 h3 v10 h5 v-6 h4 v6 h5 V11 h3 Z" fill="currentColor"/></svg>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-slate2-700">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-slate2-400"><path d="M12 22s-7-6.5-7-12a7 7 0 1 1 14 0c0 5.5-7 12-7 12Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.7"/></svg>
+            <div class="text-[15px] leading-relaxed">
+              Gutenstetter Str. 8a<br/>
+              <span class="text-slate2-500">90449 Nürnberg, Deutschland</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r" style="background:linear-gradient(to right, #F7D52C, rgba(247,213,44,.4), transparent)"></div>
+      </article>
+    </div>
+  </div>
+
   <!-- DOMIDOMI editorial mosaic — header in-grid, carousel full-bleed -->
   <div class="relative mt-16 pb-4 reveal" style="--i:3">
     <div class="max-w-[1360px] mx-auto px-4 lg:px-16 mb-8">
       <div class="max-w-2xl">
         <div class="eyebrow text-slate2-500">· DOMIDOMI v číslech</div>
         <h3 class="mt-2 text-[28px] md:text-[40px] font-extrabold text-slate2-900 leading-[1.05]">Naše čísla</h3>
-        <p class="mt-3 text-slate2-600 text-[15px] md:text-[16px] max-w-[560px]">Za značkou stojí škála, zkušenosti a lidé v terénu — ne jeden projekt vedle druhého. Níž je jen krátký průřez ukazateli, které u nás dávají smysl sledovat napříč ČR i SR.</p>
+        <p class="mt-3 text-slate2-600 text-[15px] md:text-[16px] max-w-[560px]">Za značkou stojí škála, zkušenosti a lidé v terénu — ne jeden projekt vedle druhého. Níž je jen krátký průřez ukazateli, které u nás dávají smysl sledovat napříč ČR i Německem.</p>
       </div>
     </div>
 
@@ -1162,10 +1305,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0224-1.jpg.webp')"></div>
                 <div class="dm-tile dm-w-md dm-stat dm-lime">
-                  <div class="eye">/ 03 · leady</div>
+                  <div class="eye">/ 03 · zkušenost</div>
                   <div>
-                    <div class="big tabular">100<span class="text-[32px] align-top">+</span></div>
-                    <div class="lbl mt-1">kvalitních leadů měsíčně.</div>
+                    <div class="big tabular">15<span class="text-[24px] align-top">&nbsp;let</span></div>
+                    <div class="lbl mt-1">na českém trhu.</div>
                   </div>
                 </div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0554-1-2.png.webp')"></div>
@@ -1177,7 +1320,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('D3F4F321-A851-4F98-B09A-1F36064F47DA-768x576.jpg.webp')"></div>
                 <div class="dm-tile dm-w-sq dm-stat dm-amber"><div class="eye">/ 02 · rychlost</div><div><div class="big tabular">30<span class="text-[24px] align-top">&nbsp;dní</span></div><div class="lbl mt-1">průměrná doba instalace.</div></div></div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0224-1.jpg.webp')"></div>
-                <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 03 · leady</div><div><div class="big tabular">100<span class="text-[32px] align-top">+</span></div><div class="lbl mt-1">kvalitních leadů měsíčně.</div></div></div>
+                <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 03 · zkušenost</div><div><div class="big tabular">15<span class="text-[24px] align-top">&nbsp;let</span></div><div class="lbl mt-1">na českém trhu.</div></div></div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DJI_0554-1-2.png.webp')"></div>
               </div>
             </div>
@@ -1198,21 +1341,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="lbl mt-1">kvalitních leadů měsíčně.</div>
                   </div>
                 </div>
-                <div class="dm-tile dm-w-md dm-gauge">
-                  <div class="eye font-mono text-[10px] uppercase opacity-70 tracking-widest">/ 05 · konverze</div>
-                  <div class="bar-row">
-                    <div>
-                      <div class="row mb-1"><span>schůzka → nabídka</span><span>74%</span></div>
-                      <div class="bar"><span style="width:74%"></span></div>
-                    </div>
-                    <div>
-                      <div class="row mb-1"><span>nabídka → smlouva</span><span>38%</span></div>
-                      <div class="bar"><span style="width:38%;background:#fde68a"></span></div>
-                    </div>
-                    <div>
-                      <div class="row mb-1"><span>smlouva → realizace</span><span>96%</span></div>
-                      <div class="bar"><span style="width:96%;background:#E30A1A"></span></div>
-                    </div>
+                <div class="dm-tile dm-w-md dm-stat dm-amber">
+                  <div class="eye">/ 05 · pasivní příjem</div>
+                  <div>
+                    <div class="big tabular">500–700k</div>
+                    <div class="lbl mt-1">Kč ročně díky kmenovým produktům.</div>
                   </div>
                 </div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7763-1-1.jpg.webp')"></div>
@@ -1229,7 +1362,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="flex gap-[14px] shrink-0" aria-hidden="true">
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('DSC06818-1-1.png.webp')"></div>
                 <div class="dm-tile dm-w-md dm-stat dm-lime"><div class="eye">/ 04 · leady</div><div><div class="big tabular">100<span class="text-[32px] align-top">+</span></div><div class="lbl mt-1">kvalitních leadů měsíčně.</div></div></div>
-                <div class="dm-tile dm-w-md dm-gauge"><div class="eye font-mono text-[10px] uppercase opacity-70 tracking-widest">/ 05 · konverze</div><div class="bar-row"><div><div class="row mb-1"><span>schůzka → nabídka</span><span>74%</span></div><div class="bar"><span style="width:74%"></span></div></div><div><div class="row mb-1"><span>nabídka → smlouva</span><span>38%</span></div><div class="bar"><span style="width:38%;background:#fde68a"></span></div></div><div><div class="row mb-1"><span>smlouva → realizace</span><span>96%</span></div><div class="bar"><span style="width:96%;background:#E30A1A"></span></div></div></div></div>
+                <div class="dm-tile dm-w-md dm-stat dm-amber"><div class="eye">/ 05 · pasivní příjem</div><div><div class="big tabular">500–700k</div><div class="lbl mt-1">Kč ročně díky kmenovým produktům.</div></div></div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7763-1-1.jpg.webp')"></div>
                 <div class="dm-tile dm-w-md dm-stat dm-ink"><div class="eye">/ 06 · výdělek</div><div><div class="big tabular">118k</div><div class="lbl mt-1">Kč měsíčně — průměrný výdělek.</div></div></div>
                 <div class="dm-tile dm-w-md dm-photo" style="background-image:url('MRT_7452-1-1.png.webp')"></div>
@@ -1256,7 +1389,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="flex items-center gap-3"><span class="w-8 h-8 rounded-full bg-slate-100 text-slate2-900 grid place-items-center">💼</span> <span class="font-semibold">Pracuješ odkud chceš</span></li>
         </ul>
         <button data-open-modal class="mt-10 btn-primary rounded-full pl-6 pr-2 py-2 text-[15px] font-semibold inline-flex items-center gap-3 glow-red">
-          Chci těchhle 150k
+          Chci těchhle 120k+
           <span class="grid place-items-center w-10 h-10 rounded-full bg-white/15"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
       </div>
@@ -1275,31 +1408,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="text-[11px] font-mono uppercase tracking-[.14em] text-white/40">průměr týmu</div>
                 <div class="tabular font-extrabold text-xl text-sun-300">~ 118 000 Kč</div>
               </div>
-              <div class="text-left sm:text-right min-w-[9rem]">
-                <div class="text-[10px] sm:text-[11px] font-mono uppercase tracking-[.2em] text-white/45">Průměr reziduálu</div>
-                <div class="tabular font-extrabold text-3xl sm:text-4xl leading-none text-lime2-300 mt-1.5">24 800 Kč</div>
+              <div class="text-left sm:text-right min-w-[11rem]">
+                <div class="text-[10px] sm:text-[11px] font-mono uppercase tracking-[.2em] text-white/45">Pasivní příjem ročně</div>
+                <div class="tabular font-extrabold text-3xl sm:text-4xl leading-none text-lime2-300 mt-1.5">500–700k Kč</div>
+                <div class="text-[10px] sm:text-[11px] text-white/50 mt-1.5">díky kmenovým produktům</div>
               </div>
             </div>
           </div>
 
           <div class="relative mt-8 space-y-6 text-[15px]">
-            <div class="er-row" data-pct="53">
+            <div class="er-row" data-pct="47">
               <div class="flex justify-between items-end mb-2">
                 <div class="flex items-baseline gap-2 flex-wrap">
-                  <span class="text-white/85 font-medium">Průměrný obchodník</span>
-                  <span class="text-[11px] font-mono text-white/40 uppercase tracking-widest">start</span>
+                  <span class="text-white/85 font-medium">Začátečník</span>
+                  <span class="text-[11px] font-mono text-white/40 uppercase tracking-widest">1.&nbsp;měsíc</span>
                 </div>
-                <span class="er-num tabular font-bold" data-to="80000">0&nbsp;Kč</span>
+                <span class="er-num tabular font-bold" data-to="70000">0&nbsp;Kč</span>
               </div>
               <div class="er-track h-2.5 rounded-full bg-white/10 overflow-hidden">
-                <div class="er-bar h-full bg-white/55 rounded-full" style="--w:53%"></div>
+                <div class="er-bar h-full bg-white/55 rounded-full" style="--w:47%"></div>
               </div>
             </div>
             <div class="er-row" data-pct="67">
               <div class="flex justify-between items-end mb-2">
                 <div class="flex items-baseline gap-2 flex-wrap">
-                  <span class="text-white/85 font-medium">Dobrý obchodník</span>
-                  <span class="text-[11px] font-mono text-white/40 uppercase tracking-widest">3.–6.&nbsp;měsíc</span>
+                  <span class="text-white/85 font-medium">Průměrný obchodník</span>
+                  <span class="text-[11px] font-mono text-white/40 uppercase tracking-widest">po&nbsp;3&nbsp;měsících</span>
                 </div>
                 <span class="er-num tabular font-bold" data-to="100000">0&nbsp;Kč</span>
               </div>
@@ -1307,21 +1441,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="er-bar h-full bg-white/85 rounded-full" style="--w:67%"></div>
               </div>
             </div>
-            <div class="er-row is-top" data-pct="100">
+            <div class="er-row is-top" data-pct="80">
               <div class="flex justify-between items-end mb-2">
                 <div class="flex items-baseline gap-2 flex-wrap">
                   <span class="text-white font-semibold">Skvělý obchodník</span>
                   <span class="text-[11px] font-mono text-sun-300/80 uppercase tracking-widest">top 20&nbsp;%</span>
-                  <!-- inline handwritten callout -->
-                  <span class="hand-note text-sun-300 font-hand text-[16px] rotate-[-2deg] inline-flex items-center gap-1 ml-1 whitespace-nowrap">
-                    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" class="-translate-y-[2px]"><path d="M2 11 C 6 4, 10 2, 16 3" stroke="#fcd34d" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M12 1 L16 3 L14 7" stroke="#fcd34d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-                    průměr po&nbsp;3&nbsp;měsících
-                  </span>
                 </div>
-                <span class="er-num tabular font-bold text-sun-300" data-to="150000" data-suffix="+">0&nbsp;Kč</span>
+                <span class="er-num tabular font-bold text-sun-300" data-to="120000" data-suffix="+">0&nbsp;Kč</span>
               </div>
               <div class="er-track h-2.5 rounded-full bg-white/10 overflow-hidden relative">
-                <div class="er-bar er-bar-top h-full rounded-full" style="--w:100%;background:linear-gradient(90deg,#fde68a 0%,#fcd34d 50%,#f59e0b 100%);box-shadow:0 0 20px rgba(252,211,77,.35)"></div>
+                <div class="er-bar er-bar-top h-full rounded-full" style="--w:80%;background:linear-gradient(90deg,#fde68a 0%,#fcd34d 50%,#f59e0b 100%);box-shadow:0 0 20px rgba(252,211,77,.35)"></div>
                 <span class="er-shine"></span>
               </div>
             </div>
@@ -1349,12 +1478,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <!-- Quote -->
           <div class="rounded-3xl bg-white border border-line p-6 shadow-card reveal" style="--i:3">
             <svg width="28" height="20" viewBox="0 0 28 20" fill="none" class="text-brand"><path d="M10 0 C 4 2, 0 8, 0 16 V20 H10 V10 H5 C6 6, 8 3, 11 2zM24 0 C 18 2, 14 8, 14 16 V20 H24 V10 H19 C20 6, 22 3, 25 2z" fill="currentColor"/></svg>
-            <p class="mt-4 text-[15px] text-slate2-900 leading-relaxed">Za 2 roky jsem se dostal na <span class="font-bold">120 000 Kč měsíčně</span>. Férový systém a skvělý tým.</p>
+            <p class="mt-4 text-[15px] text-slate2-900 leading-relaxed">Za 5 měsíců jsem se dostal na <span class="font-bold">120 000 Kč měsíčně</span>. Férový systém a skvělý tým.</p>
             <div class="mt-6 flex items-center gap-3">
               <picture class="contents shrink-0"><source srcset="media/jan-kaiser.avif" type="image/avif"/><source srcset="media/jan-kaiser.webp" type="image/webp"/><img src="media/jan-kaiser.webp" alt="Jan Kaiser" width="40" height="40" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" decoding="async"/></picture>
               <div class="text-[13px]">
                 <div class="font-bold">Jan Kaiser</div>
-                <div class="text-slate2-500">B2B obchodník · 2 roky</div>
+                <div class="text-slate2-500">B2B obchodník · 5 měsíců</div>
               </div>
             </div>
           </div>
@@ -1435,7 +1564,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="lg:col-span-4 reveal">
         <div class="eyebrow text-slate2-500 mb-4">· FAQ</div>
         <h2 class="h-tight text-[40px] md:text-[52px] font-extrabold text-slate2-900">Otázky, které<br/>dostáváme nejčastěji.</h2>
-        <p class="mt-5 text-slate2-600 leading-relaxed max-w-[380px]">Něco chybí? Napiš nám do formuláře — odpovíme ti osobně, ne šablonou.</p>
       </div>
       <div class="lg:col-span-8 space-y-3">
         <!-- faq items -->
@@ -1458,7 +1586,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="font-semibold text-[17px] text-slate2-900">Jak rychle se dostanu na slíbené výdělky?</span>
             <span class="plus w-8 h-8 rounded-full bg-slate-100 grid place-items-center shrink-0 self-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           </summary>
-          <p class="mt-4 text-slate2-600 leading-relaxed">Průměr 80 000 Kč vidíme u našich OZ po cca 3 měsících. Není to garance — je to realita z interních dat.</p>
+          <p class="mt-4 text-slate2-600 leading-relaxed">Průměr 100 000 Kč vidíme u našich OZ po cca 3 měsících. Není to garance — je to realita z interních dat.</p>
         </details>
         <details class="group rounded-2xl bg-white border border-line p-5 shadow-card open:shadow-cardHover">
           <summary class="flex items-center justify-between cursor-pointer list-none">
@@ -1559,9 +1687,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
     </div>
 
-    <!-- Mid row: brand + nav + regions -->
+    <!-- Mid row: brand + nav -->
     <div class="mt-16 grid md:grid-cols-12 gap-10">
-      <div class="md:col-span-5">
+      <div class="md:col-span-6">
         <a href="#" class="inline-flex items-center text-white hover:text-white/90 transition" aria-label="DOMIDOMI OTZ">
           <svg class="h-10 w-auto shrink-0 max-w-[min(100%,260px)] md:h-11" width="1172" height="648" viewBox="0 0 1172 648" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M945.442 195.651V338.206L864.049 414.456L782.63 338.206V195.651H945.442Z" fill="#E30A1A"/>
@@ -1578,9 +1706,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="mt-5 text-white/55 text-[14px] max-w-[380px] leading-relaxed">Nábor obchodně-technických zástupců pro celý ekosystém služeb kolem moderního bydlení — FVE, tepelná čerpadla, energie, stavby, finance.</p>
       </div>
 
-      <div class="md:col-span-3">
+      <div class="md:col-span-6">
         <div class="eyebrow text-white/40 mb-4">Stránka</div>
-        <ul class="space-y-2.5 text-[14px] text-white/70">
+        <ul class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 md:grid-flow-col gap-y-2.5 md:gap-x-8 text-[14px] text-white/70">
           <li><a href="#benefity" class="inline-flex items-center gap-2 hover:text-white transition"><span class="w-1 h-1 rounded-full bg-white/30"></span>Benefity</a></li>
           <li><a href="#ekosystem" class="inline-flex items-center gap-2 hover:text-white transition"><span class="w-1 h-1 rounded-full bg-white/30"></span>Ekosystém</a></li>
           <li><a href="#pribehy" class="inline-flex items-center gap-2 hover:text-white transition"><span class="w-1 h-1 rounded-full bg-white/30"></span>Lidé</a></li>
@@ -1589,19 +1717,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </ul>
       </div>
 
-      <div class="md:col-span-4">
-        <div class="eyebrow text-white/40 mb-4">Pobočky · ČR / SK</div>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-2.5 text-[14px] text-white/70">
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Praha</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Brno</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Ostrava</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Plzeň</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Hradec Králové</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Liberec</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-sun-400"></span>Bratislava</div>
-          <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-sun-400"></span>Košice</div>
-        </div>
-      </div>
     </div>
 
     <div class="hair my-10"></div>
