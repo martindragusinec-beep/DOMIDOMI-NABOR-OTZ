@@ -263,12 +263,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .usp-scroll::-webkit-scrollbar { display: none; }
     .usp-scroll > article {
       flex: 0 0 85%;
-      max-width: 340px;
+      max-width: 320px;
       scroll-snap-align: center;
     }
     .usp-scroll > article > div {
-      min-height: 420px;
+      min-height: 340px;
       height: 100%;
+      padding: 20px !important;
+    }
+    /* USP 2 scan scene — smaller on mobile so card 2 nevybočuje */
+    .usp-scroll > article > div [data-scan-scene] {
+      height: 150px !important;
+    }
+    /* USP 2 bottom chip ribbon — skrýt na mobilu aby karta nebyla moc vysoká */
+    .usp-scroll > article.md\:col-span-4 > div > div.md\:flex-1 > div.mt-auto {
+      display: none !important;
     }
   }
   .usp-dots {
