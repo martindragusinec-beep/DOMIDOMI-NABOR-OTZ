@@ -2496,11 +2496,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     `).join('');
     heroHost.querySelectorAll('[data-hero-opt]').forEach(btn => {
       btn.addEventListener('click', () => {
+        heroHost.querySelectorAll('[data-hero-opt]').forEach(b => b.classList.remove('on'));
         btn.classList.add('on');
         setTimeout(() => {
           window.__openModalWithState({ step: 1, region: btn.dataset.val });
         }, 180);
       });
+    });
+    // reset hero selection když se modal zavře
+    document.querySelectorAll('[data-close-modal]').forEach(el => {
+      el.addEventListener('click', () => {
+        heroHost.querySelectorAll('[data-hero-opt]').forEach(b => b.classList.remove('on'));
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        heroHost.querySelectorAll('[data-hero-opt]').forEach(b => b.classList.remove('on'));
+      }
     });
   }
 })();
