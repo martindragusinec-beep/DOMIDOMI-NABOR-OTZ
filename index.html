@@ -16,9 +16,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:description" content="Nábor otevřen · ČR. Neprodáváme produkt, ale kompletní řešení pro dům — dodáme ti horké leady, žádné cold cally. Provize bez stropu, vlastní čas. Průměrný výdělek OZ 80–150 tis. měsíčně." />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="cs_CZ" />
+<meta property="og:url" content="https://www.kariera.domidomi.cz/" />
+<meta property="og:image" content="https://www.kariera.domidomi.cz/thumbnail.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="DOMIDOMI OTZ — Nábor obchodníků" />
 <meta name="twitter:description" content="Svoboda, pasivní příjem a práce se smyslem. Horké leady od firmy, průměr OZ 80–150 tis. měsíčně. Ověř to za minutu — nábor po celé České republice." />
+<meta name="twitter:image" content="https://www.kariera.domidomi.cz/thumbnail.png" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
@@ -626,7 +629,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* misc */
   .tabular { font-variant-numeric: tabular-nums; }
 </style>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="antialiased" data-make-webhook="">
 <!-- Google Tag Manager (noscript) -->
@@ -2380,7 +2382,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
           <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
         </label>
-        <div class="g-recaptcha mt-3" data-sitekey="6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv"></div>
+        <label class="hidden" aria-hidden="true">
+          <span>Nechte prázdné</span>
+          <input name="company_website" tabindex="-1" autocomplete="off" />
+        </label>
         <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
           <span class="sm:hidden">Odeslat a domluvit schůzku</span>
           <span class="hidden sm:inline">Odeslat a rezervovat termín pohovoru</span>
@@ -2417,8 +2422,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
   const licenses = ['Ano','Ne'];
-  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
-
   function getMakeWebhookUrl() {
     const fromBody = document.body && document.body.getAttribute('data-make-webhook');
     if (fromBody && fromBody.trim()) return fromBody.trim();
@@ -2426,29 +2429,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return '';
   }
 
-  function initRecaptchaSlot(container) {
-    const slot = container.querySelector('.recaptcha-slot');
-    if (!slot) return;
-    slot.innerHTML = '';
-    delete slot.dataset.gRecaptchaId;
-    const mount = () => {
-      if (!window.grecaptcha || !slot.isConnected) return;
-      grecaptcha.ready(function () {
-        try {
-          var wid = grecaptcha.render(slot, { sitekey: RECAPTCHA_SITEKEY });
-          slot.dataset.gRecaptchaId = String(wid);
-        } catch (e) { console.error(e); }
-      });
+  function computeSpamFlag(cf) {
+    const hp = String((cf.querySelector('input[name="company_website"]') || {}).value || '').trim();
+    const mountedAt = Number(cf.dataset.mountedAt || 0);
+    const elapsedMs = mountedAt > 0 ? Date.now() - mountedAt : 0;
+    const reasons = [];
+    if (hp) reasons.push('honeypot');
+    if (elapsedMs > 0 && elapsedMs < 2500) reasons.push('too_fast');
+    return {
+      spamFlag: reasons.length ? 1 : 0,
+      spamReasons: reasons,
+      elapsedMs: elapsedMs
     };
-    if (window.grecaptcha) mount();
-    else {
-      var n = 0;
-      var t = setInterval(function () {
-        n++;
-        if (window.grecaptcha) { clearInterval(t); mount(); }
-        if (n > 100) clearInterval(t);
-      }, 50);
-    }
   }
 
   window.__mountFormV2 = function(host, initial) {
@@ -2494,7 +2486,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
       });
       const cf = body.querySelector('#contact-form');
-      if (cf) cf.addEventListener('submit', function (e) {
+      if (cf) {
+        cf.dataset.mountedAt = String(Date.now());
+        cf.addEventListener('submit', function (e) {
         e.preventDefault();
         var errEl = cf.querySelector('.form-submit-error');
         var btn = cf.querySelector('[type="submit"]');
@@ -2503,18 +2497,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
 
-        var slot = cf.querySelector('.recaptcha-slot');
-        var wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : 0;
-        var token = window.grecaptcha ? grecaptcha.getResponse(wid) : '';
-        if (!token) {
-          showErr('Potvrď prosím reCAPTCHA (nejsem robot).');
-          return;
-        }
-
         var fd = new FormData(cf);
         state.name = fd.get('name');
         state.phone = fd.get('phone');
         state.email = fd.get('email');
+        var spamCheck = computeSpamFlag(cf);
 
         var webhookUrl = getMakeWebhookUrl();
         if (!webhookUrl) {
@@ -2530,7 +2517,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           region: state.region,
           experience: state.exp,
           license: state.license,
-          recaptchaToken: token,
+          spamFlag: spamCheck.spamFlag,
+          spamReasons: spamCheck.spamReasons.join(','),
+          formFillMs: spamCheck.elapsedMs,
           submittedAt: new Date().toISOString()
         };
 
@@ -2547,13 +2536,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).catch(function (err) {
           console.error(err);
           showErr('Odeslání se nezdařilo. Zkus to prosím znovu.');
-          if (window.grecaptcha && !isNaN(wid)) grecaptcha.reset(wid);
         }).finally(function () {
           if (btn) btn.disabled = false;
         });
       });
-
-      if (state.step === 3) requestAnimationFrame(function () { initRecaptchaSlot(body); });
+      }
 
       requestAnimationFrame(() => body.classList.add('step-in'));
     }
@@ -2591,7 +2578,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
             <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
           </label>
-          <div class="recaptcha-slot mt-3 min-h-[78px]"></div>
+          <label class="hidden" aria-hidden="true">
+            <span>Nechte prázdné</span>
+            <input name="company_website" tabindex="-1" autocomplete="off" />
+          </label>
           <p class="form-submit-error hidden text-sm text-red-600 mt-2" role="alert"></p>
           <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
             <span class="sm:hidden">Odeslat a domluvit schůzku</span>
