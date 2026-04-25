@@ -628,6 +628,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .hair-light { background: linear-gradient(90deg, transparent, rgba(15,23,42,.12), transparent); height: 1px; }
   /* misc */
   .tabular { font-variant-numeric: tabular-nums; }
+  .grecaptcha-badge {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 </style>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -2384,6 +2389,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
           <span>Souhlasím se zpracováním údajů za účelem náboru a se <a href="https://domidomi.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">zásadami ochrany osobních údajů</a>.</span>
         </label>
+        <p class="text-[11px] leading-relaxed text-slate2-500">
+          Tento web je chráněn službou reCAPTCHA a platí
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">Google Privacy Policy</a>
+          a
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">Terms of Service</a>.
+        </p>
         <label class="hidden" aria-hidden="true">
           <span>Nechte prázdné</span>
           <input name="company_website" tabindex="-1" autocomplete="off" />
@@ -2446,20 +2457,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
   }
 
-  function initRecaptchaSlot(container) {
-    const slot = container.querySelector('.recaptcha-slot');
-    if (!slot) return;
-    slot.innerHTML = '';
-    delete slot.dataset.gRecaptchaId;
+  let recaptchaWidgetId = null;
+  function initRecaptchaSlot() {
+    if (recaptchaWidgetId !== null) return;
+    let slot = document.getElementById('recaptcha-root');
+    if (!slot) {
+      slot = document.createElement('div');
+      slot.id = 'recaptcha-root';
+      document.body.appendChild(slot);
+    }
     const mount = () => {
       if (!window.grecaptcha || !slot.isConnected) return;
       grecaptcha.ready(function () {
         try {
           const wid = grecaptcha.render(slot, {
             sitekey: RECAPTCHA_SITEKEY,
-            size: 'invisible'
+            size: 'invisible',
+            badge: 'bottomright'
           });
-          slot.dataset.gRecaptchaId = String(wid);
+          recaptchaWidgetId = wid;
         } catch (e) { console.error(e); }
       });
     };
@@ -2474,16 +2490,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  function getRecaptchaToken(cf) {
+  function getRecaptchaToken() {
     return new Promise(function (resolve) {
-      const slot = cf.querySelector('.recaptcha-slot');
-      const wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : NaN;
-      if (!window.grecaptcha || Number.isNaN(wid)) return resolve('');
+      if (!window.grecaptcha || recaptchaWidgetId === null) return resolve('');
       try {
         grecaptcha.ready(function () {
-          Promise.resolve(grecaptcha.execute(wid))
+          Promise.resolve(grecaptcha.execute(recaptchaWidgetId))
             .then(function () {
-              resolve(grecaptcha.getResponse(wid) || '');
+              resolve(grecaptcha.getResponse(recaptchaWidgetId) || '');
             })
             .catch(function () { resolve(''); });
         });
@@ -2551,7 +2565,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         state.name = fd.get('name');
         state.phone = fd.get('phone');
         state.email = fd.get('email');
-        var recaptchaToken = await getRecaptchaToken(cf);
+        var recaptchaToken = await getRecaptchaToken();
         var spamCheck = computeSpamFlag(cf);
         if (!recaptchaToken) spamCheck.spamReasons.push('recaptcha_missing');
 
@@ -2589,14 +2603,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).catch(function (err) {
           console.error(err);
           showErr('Odeslání se nezdařilo. Zkus to prosím znovu.');
-          const slot = cf.querySelector('.recaptcha-slot');
-          const wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : NaN;
-          if (window.grecaptcha && !Number.isNaN(wid)) grecaptcha.reset(wid);
+          if (window.grecaptcha && recaptchaWidgetId !== null) grecaptcha.reset(recaptchaWidgetId);
         }).finally(function () {
           if (btn) btn.disabled = false;
         });
       });
-        requestAnimationFrame(function () { initRecaptchaSlot(body); });
+        requestAnimationFrame(function () { initRecaptchaSlot(); });
       }
 
       requestAnimationFrame(() => body.classList.add('step-in'));
@@ -2635,11 +2647,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
             <span>Souhlasím se zpracováním údajů za účelem náboru a se <a href="https://domidomi.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">zásadami ochrany osobních údajů</a>.</span>
           </label>
+          <p class="text-[11px] leading-relaxed text-slate2-500">
+            Tento web je chráněn službou reCAPTCHA a platí
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">Google Privacy Policy</a>
+            a
+            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">Terms of Service</a>.
+          </p>
           <label class="hidden" aria-hidden="true">
             <span>Nechte prázdné</span>
             <input name="company_website" tabindex="-1" autocomplete="off" />
           </label>
-          <div class="recaptcha-slot absolute -left-[9999px] top-auto w-px h-px overflow-hidden" aria-hidden="true"></div>
           <p class="form-submit-error hidden text-sm text-red-600 mt-2" role="alert"></p>
           <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
             <span class="sm:hidden">Odeslat a domluvit schůzku</span>
