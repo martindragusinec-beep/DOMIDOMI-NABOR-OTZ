@@ -629,6 +629,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* misc */
   .tabular { font-variant-numeric: tabular-nums; }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="antialiased" data-make-webhook="">
 <!-- Google Tag Manager (noscript) -->
@@ -2246,7 +2247,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   const openModal = () => {
     modal.classList.remove('hidden');
-    mountForm(modalHost, 'modal');
+    if (window.__mountFormV2) window.__mountFormV2(modalHost);
+    else mountForm(modalHost, 'modal');
     document.body.style.overflow = 'hidden';
   };
   const closeModal = () => {
@@ -2380,7 +2382,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <label class="flex items-start gap-3 mt-1 text-[13px] text-slate2-600">
           <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
-          <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
+          <span>Souhlasím se zpracováním údajů za účelem náboru a se <a href="https://domidomi.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">zásadami ochrany osobních údajů</a>.</span>
         </label>
         <label class="hidden" aria-hidden="true">
           <span>Nechte prázdné</span>
@@ -2421,6 +2423,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (() => {
   const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
+  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
   const licenses = ['Ano','Ne'];
   function getMakeWebhookUrl() {
     const fromBody = document.body && document.body.getAttribute('data-make-webhook');
@@ -2441,6 +2444,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       spamReasons: reasons,
       elapsedMs: elapsedMs
     };
+  }
+
+  function initRecaptchaSlot(container) {
+    const slot = container.querySelector('.recaptcha-slot');
+    if (!slot) return;
+    slot.innerHTML = '';
+    delete slot.dataset.gRecaptchaId;
+    const mount = () => {
+      if (!window.grecaptcha || !slot.isConnected) return;
+      grecaptcha.ready(function () {
+        try {
+          const wid = grecaptcha.render(slot, {
+            sitekey: RECAPTCHA_SITEKEY,
+            size: 'invisible'
+          });
+          slot.dataset.gRecaptchaId = String(wid);
+        } catch (e) { console.error(e); }
+      });
+    };
+    if (window.grecaptcha) mount();
+    else {
+      let n = 0;
+      const t = setInterval(function () {
+        n++;
+        if (window.grecaptcha) { clearInterval(t); mount(); }
+        if (n > 100) clearInterval(t);
+      }, 50);
+    }
+  }
+
+  function getRecaptchaToken(cf) {
+    return new Promise(function (resolve) {
+      const slot = cf.querySelector('.recaptcha-slot');
+      const wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : NaN;
+      if (!window.grecaptcha || Number.isNaN(wid)) return resolve('');
+      try {
+        grecaptcha.ready(function () {
+          Promise.resolve(grecaptcha.execute(wid))
+            .then(function () {
+              resolve(grecaptcha.getResponse(wid) || '');
+            })
+            .catch(function () { resolve(''); });
+        });
+      } catch (e) {
+        resolve('');
+      }
+    });
   }
 
   window.__mountFormV2 = function(host, initial) {
@@ -2488,7 +2538,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const cf = body.querySelector('#contact-form');
       if (cf) {
         cf.dataset.mountedAt = String(Date.now());
-        cf.addEventListener('submit', function (e) {
+        cf.addEventListener('submit', async function (e) {
         e.preventDefault();
         var errEl = cf.querySelector('.form-submit-error');
         var btn = cf.querySelector('[type="submit"]');
@@ -2501,7 +2551,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         state.name = fd.get('name');
         state.phone = fd.get('phone');
         state.email = fd.get('email');
+        var recaptchaToken = await getRecaptchaToken(cf);
         var spamCheck = computeSpamFlag(cf);
+        if (!recaptchaToken) spamCheck.spamReasons.push('recaptcha_missing');
 
         var webhookUrl = getMakeWebhookUrl();
         if (!webhookUrl) {
@@ -2517,7 +2569,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           region: state.region,
           experience: state.exp,
           license: state.license,
-          spamFlag: spamCheck.spamFlag,
+          recaptchaToken: recaptchaToken,
+          spamFlag: (spamCheck.spamFlag || !recaptchaToken) ? 1 : 0,
           spamReasons: spamCheck.spamReasons.join(','),
           formFillMs: spamCheck.elapsedMs,
           submittedAt: new Date().toISOString()
@@ -2536,10 +2589,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).catch(function (err) {
           console.error(err);
           showErr('Odeslání se nezdařilo. Zkus to prosím znovu.');
+          const slot = cf.querySelector('.recaptcha-slot');
+          const wid = slot && slot.dataset.gRecaptchaId ? parseInt(slot.dataset.gRecaptchaId, 10) : NaN;
+          if (window.grecaptcha && !Number.isNaN(wid)) grecaptcha.reset(wid);
         }).finally(function () {
           if (btn) btn.disabled = false;
         });
       });
+        requestAnimationFrame(function () { initRecaptchaSlot(body); });
       }
 
       requestAnimationFrame(() => body.classList.add('step-in'));
@@ -2576,12 +2633,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <label class="flex items-start gap-3 mt-1 text-[13px] text-slate2-600">
             <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
-            <span>Souhlasím se zpracováním údajů za účelem náboru.</span>
+            <span>Souhlasím se zpracováním údajů za účelem náboru a se <a href="https://domidomi.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">zásadami ochrany osobních údajů</a>.</span>
           </label>
           <label class="hidden" aria-hidden="true">
             <span>Nechte prázdné</span>
             <input name="company_website" tabindex="-1" autocomplete="off" />
           </label>
+          <div class="recaptcha-slot absolute -left-[9999px] top-auto w-px h-px overflow-hidden" aria-hidden="true"></div>
           <p class="form-submit-error hidden text-sm text-red-600 mt-2" role="alert"></p>
           <button type="submit" class="mt-2 btn-primary rounded-2xl py-4 font-semibold flex items-center justify-center gap-3 glow-red">
             <span class="sm:hidden">Odeslat a domluvit schůzku</span>
@@ -2626,11 +2684,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // rebind open buttons to use V2 mount
   const modal = document.getElementById('modal');
-  document.querySelectorAll('[data-open-modal]').forEach(b => {
-    b.addEventListener('click', (e) => {
-      window.__mountFormV2(modalHost);
-    });
-  });
+  // Modal open is handled by the original openModal listener above.
 
   // Hero step-1 options — click advances to step 2 with selected region
   const heroHost = document.getElementById('hero-quiz-options');
