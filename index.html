@@ -2458,6 +2458,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   let recaptchaWidgetId = null;
+  /** v2 invisible: token arrives in render() callback, not after execute() Promise */
+  let recaptchaTokenResolver = null;
   function initRecaptchaSlot() {
     if (recaptchaWidgetId !== null) return;
     let slot = document.getElementById('recaptcha-root');
@@ -2473,7 +2475,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const wid = grecaptcha.render(slot, {
             sitekey: RECAPTCHA_SITEKEY,
             size: 'invisible',
-            badge: 'bottomright'
+            badge: 'bottomright',
+            callback: function (token) {
+              var r = recaptchaTokenResolver;
+              recaptchaTokenResolver = null;
+              if (r) r(token || (grecaptcha.getResponse(wid) || ''));
+            },
+            'error-callback': function () {
+              var r = recaptchaTokenResolver;
+              recaptchaTokenResolver = null;
+              if (r) r('');
+            }
           });
           recaptchaWidgetId = wid;
         } catch (e) { console.error(e); }
@@ -2492,18 +2504,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function getRecaptchaToken() {
     return new Promise(function (resolve) {
-      if (!window.grecaptcha || recaptchaWidgetId === null) return resolve('');
-      try {
-        grecaptcha.ready(function () {
-          Promise.resolve(grecaptcha.execute(recaptchaWidgetId))
-            .then(function () {
-              resolve(grecaptcha.getResponse(recaptchaWidgetId) || '');
-            })
-            .catch(function () { resolve(''); });
-        });
-      } catch (e) {
-        resolve('');
+      initRecaptchaSlot();
+      var settled = false;
+      var failTimer = null;
+      function finish(val) {
+        if (settled) return;
+        settled = true;
+        if (failTimer) clearTimeout(failTimer);
+        resolve(val || '');
       }
+      function run(elapsed) {
+        if (!window.grecaptcha) return finish('');
+        if (recaptchaWidgetId === null) {
+          if (elapsed > 12000) return finish('');
+          return setTimeout(function () { run(elapsed + 50); }, 50);
+        }
+        if (recaptchaTokenResolver) recaptchaTokenResolver('');
+        recaptchaTokenResolver = finish;
+        failTimer = setTimeout(function () {
+          if (recaptchaTokenResolver === finish) {
+            recaptchaTokenResolver = null;
+            finish(grecaptcha.getResponse(recaptchaWidgetId) || '');
+          }
+        }, 25000);
+        grecaptcha.ready(function () {
+          try {
+            grecaptcha.reset(recaptchaWidgetId);
+          } catch (e) {}
+          try {
+            grecaptcha.execute(recaptchaWidgetId);
+          } catch (e) {
+            recaptchaTokenResolver = null;
+            finish('');
+          }
+        });
+      }
+      run(0);
     });
   }
 
@@ -2608,7 +2644,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (btn) btn.disabled = false;
         });
       });
-        requestAnimationFrame(function () { initRecaptchaSlot(); });
       }
 
       requestAnimationFrame(() => body.classList.add('step-in'));
@@ -2690,6 +2725,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const inlineHost = document.getElementById('inline-form-host');
   const modalHost = document.getElementById('modal-host');
   if (inlineHost) window.__mountFormV2(inlineHost);
+  initRecaptchaSlot();
 
   // expose for hero
   window.__openModalWithState = function(initial) {
