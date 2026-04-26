@@ -2445,14 +2445,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     ));
   }
 
+  /** Standardní v3 musí používat grecaptcha.ready — enterprise.ready dřív v řetězci umí viset a nechat čekat až do timeoutu. */
   function rcReady(fn) {
-    if (window.grecaptcha && grecaptcha.enterprise && typeof grecaptcha.enterprise.ready === 'function') {
-      grecaptcha.enterprise.ready(fn);
-    } else if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
-      grecaptcha.ready(fn);
-    } else {
+    if (!window.grecaptcha) {
       setTimeout(fn, 0);
+      return;
     }
+    if (typeof grecaptcha.execute === 'function' && typeof grecaptcha.ready === 'function') {
+      grecaptcha.ready(fn);
+      return;
+    }
+    if (grecaptcha.enterprise && typeof grecaptcha.enterprise.execute === 'function' && typeof grecaptcha.enterprise.ready === 'function') {
+      grecaptcha.enterprise.ready(fn);
+      return;
+    }
+    if (typeof grecaptcha.ready === 'function') {
+      grecaptcha.ready(fn);
+      return;
+    }
+    setTimeout(fn, 0);
   }
 
   function rcFindScriptTag() {
@@ -2464,6 +2475,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return null;
   }
 
+  function rcRemoveOurRecaptchaScript() {
+    var t = rcFindScriptTag();
+    if (t && t.parentNode) t.parentNode.removeChild(t);
+    try {
+      delete window.grecaptcha;
+    } catch (e) {}
+  }
+
   function rcInjectScript(url) {
     return new Promise(function (resolve, reject) {
       var existing = rcFindScriptTag();
@@ -2472,8 +2491,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           resolve();
           return;
         }
-        existing.addEventListener('load', function () { resolve(); });
-        existing.addEventListener('error', function () { reject(new Error('load')); });
+        var settled = false;
+        var pollIv = null;
+        function finish(ok, err) {
+          if (settled) return;
+          settled = true;
+          if (pollIv) clearInterval(pollIv);
+          if (ok) resolve();
+          else reject(err || new Error('recaptcha-stale'));
+        }
+        function tryResolve() {
+          if (rcHasExecute()) finish(true);
+        }
+        existing.addEventListener('load', tryResolve);
+        existing.addEventListener('error', function () { finish(false, new Error('load')); });
+        setTimeout(tryResolve, 0);
+        setTimeout(tryResolve, 50);
+        var polls = 0;
+        pollIv = setInterval(function () {
+          tryResolve();
+          polls++;
+          if (rcHasExecute()) finish(true);
+          else if (polls > 40) finish(false);
+        }, 100);
         return;
       }
       var s = document.createElement('script');
@@ -2492,8 +2532,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var enc = encodeURIComponent(RECAPTCHA_SITEKEY);
     var urls = [
       'https://www.google.com/recaptcha/api.js?render=' + enc,
-      'https://www.recaptcha.net/recaptcha/api.js?render=' + enc,
-      'https://www.google.com/recaptcha/enterprise.js?render=' + enc
+      'https://www.recaptcha.net/recaptcha/api.js?render=' + enc
     ];
     var P = new Promise(function (resolve, reject) {
       if (rcHasExecute()) {
@@ -2517,9 +2556,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           })
           .then(function () {
             if (rcHasExecute()) resolve();
-            else tryNext();
+            else {
+              rcRemoveOurRecaptchaScript();
+              tryNext();
+            }
           })
-          .catch(function () { tryNext(); });
+          .catch(function () {
+            rcRemoveOurRecaptchaScript();
+            tryNext();
+          });
       }
       tryNext();
     });
@@ -2552,7 +2597,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   function getRecaptchaToken() {
-    var HARD_MS = 20000;
+    var HARD_MS = 12000;
     function run() {
       return loadRecaptchaV3().then(function () {
         return new Promise(function (resolve) {
