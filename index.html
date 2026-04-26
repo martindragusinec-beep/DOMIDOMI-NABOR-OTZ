@@ -635,7 +635,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 </style>
 </head>
-<body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6">
+<body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6" data-recaptcha-version="v2">
+<!-- reCAPTCHA: v2 = klíč typu „v2 Invisible“ (výchozí, token do Make). Jen čistý v3 klíč v adminu → data-recaptcha-version="v3" -->
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMR8VLK3"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -2435,9 +2436,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
   const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
   const licenses = ['Ano','Ne'];
+  const RECAPTCHA_VERSION = String((document.body && document.body.getAttribute('data-recaptcha-version')) || 'v2').toLowerCase().trim();
 
-  /** v3: load api.js?render=KEY ourselves so it is not blocked by defer/ordering vs body scripts */
-  function ensureRecaptchaScript() {
+  /** v3: api.js?render=KEY */
+  function ensureRecaptchaV3Script() {
     if (window.__recaptchaV3LoadPromise) return window.__recaptchaV3LoadPromise;
     var src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(RECAPTCHA_SITEKEY);
     window.__recaptchaV3LoadPromise = new Promise(function (resolve, reject) {
@@ -2446,7 +2448,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var el;
       for (i = 0; i < scripts.length; i++) {
         el = scripts[i];
-        if (el.src.indexOf(RECAPTCHA_SITEKEY) !== -1) {
+        if (el.src.indexOf('render=') !== -1 && el.src.indexOf(RECAPTCHA_SITEKEY) !== -1) {
           if (window.grecaptcha && typeof grecaptcha.execute === 'function') {
             resolve();
             return;
@@ -2465,7 +2467,81 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
     return window.__recaptchaV3LoadPromise;
   }
-  ensureRecaptchaScript().catch(function () {});
+
+  /** v2 invisible: api.js bez ?render= */
+  function ensureRecaptchaV2Script() {
+    if (window.__recaptchaV2LoadPromise) return window.__recaptchaV2LoadPromise;
+    window.__recaptchaV2LoadPromise = new Promise(function (resolve, reject) {
+      var scripts = document.querySelectorAll('script[src*="google.com/recaptcha/api.js"]');
+      var i;
+      var el;
+      for (i = 0; i < scripts.length; i++) {
+        el = scripts[i];
+        if (el.src.indexOf('render=') === -1) {
+          if (window.grecaptcha && typeof grecaptcha.render === 'function') {
+            resolve();
+            return;
+          }
+          el.addEventListener('load', function () { resolve(); });
+          el.addEventListener('error', function () { reject(new Error('recaptcha')); });
+          return;
+        }
+      }
+      var s = document.createElement('script');
+      s.src = 'https://www.google.com/recaptcha/api.js';
+      s.async = true;
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error('recaptcha')); };
+      document.head.appendChild(s);
+    });
+    return window.__recaptchaV2LoadPromise;
+  }
+
+  var recaptchaV2WidgetId = null;
+  var recaptchaV2TokenFinish = null;
+  function initRecaptchaV2Widget() {
+    if (recaptchaV2WidgetId !== null) return Promise.resolve(recaptchaV2WidgetId);
+    return ensureRecaptchaV2Script().then(function () {
+      return new Promise(function (resolve, reject) {
+        var slot = document.getElementById('recaptcha-root');
+        if (!slot) {
+          slot = document.createElement('div');
+          slot.id = 'recaptcha-root';
+          document.body.appendChild(slot);
+        }
+        grecaptcha.ready(function () {
+          try {
+            var wid = grecaptcha.render(slot, {
+              sitekey: RECAPTCHA_SITEKEY,
+              size: 'invisible',
+              badge: 'bottomright',
+              callback: function (token) {
+                var fn = recaptchaV2TokenFinish;
+                recaptchaV2TokenFinish = null;
+                if (fn) fn(token || (grecaptcha.getResponse(wid) || ''));
+              },
+              'error-callback': function () {
+                var fn = recaptchaV2TokenFinish;
+                recaptchaV2TokenFinish = null;
+                if (fn) fn('');
+              }
+            });
+            recaptchaV2WidgetId = wid;
+            resolve(wid);
+          } catch (e) {
+            console.error('recaptcha v2 render', e);
+            reject(e);
+          }
+        });
+      });
+    });
+  }
+
+  if (RECAPTCHA_VERSION === 'v3') {
+    ensureRecaptchaV3Script().catch(function () {});
+  } else {
+    initRecaptchaV2Widget().catch(function () {});
+  }
   function getMakeWebhookUrl() {
     const fromBody = document.body && document.body.getAttribute('data-make-webhook');
     if (fromBody && fromBody.trim()) return fromBody.trim();
@@ -2487,11 +2563,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
   }
 
-  /** reCAPTCHA v3: token from execute; hard timeout so submit never hangs on blocked Google */
-  function getRecaptchaToken() {
+  function getRecaptchaTokenV3() {
     var HARD_MS = 10000;
     function v3ExecutePromise() {
-      return ensureRecaptchaScript().then(function () {
+      return ensureRecaptchaV3Script().then(function () {
         return new Promise(function (resolve) {
           if (!window.grecaptcha || typeof grecaptcha.ready !== 'function') {
             return resolve('');
@@ -2513,7 +2588,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 return resolve('');
               }
             } else {
-              console.warn('recaptcha: no execute (zkontroluj typ klíče v3 / doménu v adminu)');
+              console.warn('recaptcha v3: chybí execute');
               return resolve('');
             }
             Promise.resolve(p)
@@ -2532,6 +2607,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         setTimeout(function () { resolve(''); }, HARD_MS);
       })
     ]);
+  }
+
+  /** v2 invisible: token jen v callback po execute(widgetId) */
+  function getRecaptchaTokenV2() {
+    var HARD_MS = 15000;
+    return Promise.race([
+      initRecaptchaV2Widget().then(function () {
+        return new Promise(function (resolve) {
+          var settled = false;
+          var failTimer;
+          function finish(val) {
+            if (settled) return;
+            settled = true;
+            if (failTimer) clearTimeout(failTimer);
+            resolve(val || '');
+          }
+          if (recaptchaV2TokenFinish) recaptchaV2TokenFinish('');
+          recaptchaV2TokenFinish = finish;
+          failTimer = setTimeout(function () {
+            if (recaptchaV2TokenFinish === finish) {
+              recaptchaV2TokenFinish = null;
+              try {
+                finish(grecaptcha.getResponse(recaptchaV2WidgetId) || '');
+              } catch (e) {
+                finish('');
+              }
+            }
+          }, HARD_MS);
+          grecaptcha.ready(function () {
+            try {
+              grecaptcha.reset(recaptchaV2WidgetId);
+            } catch (e) {}
+            try {
+              grecaptcha.execute(recaptchaV2WidgetId);
+            } catch (e) {
+              recaptchaV2TokenFinish = null;
+              finish('');
+            }
+          });
+        });
+      }).catch(function (e) {
+        console.error('recaptcha v2', e);
+        return '';
+      }),
+      new Promise(function (resolve) {
+        setTimeout(function () { resolve(''); }, HARD_MS);
+      })
+    ]);
+  }
+
+  function getRecaptchaToken() {
+    if (RECAPTCHA_VERSION === 'v3') return getRecaptchaTokenV3();
+    return getRecaptchaTokenV2();
   }
 
   window.__mountFormV2 = function(host, initial) {
