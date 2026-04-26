@@ -634,7 +634,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     pointer-events: none !important;
   }
 </style>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<!-- v3: ?render= must use the same site key as RECAPTCHA_SITEKEY in the form script -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv" async defer></script>
 </head>
 <body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6">
 <!-- Google Tag Manager (noscript) -->
@@ -2434,7 +2435,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (() => {
   const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
-  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
+  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv'; /* same as ?render= in <head> */
   const licenses = ['Ano','Ne'];
   function getMakeWebhookUrl() {
     const fromBody = document.body && document.body.getAttribute('data-make-webhook');
@@ -2457,89 +2458,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
   }
 
-  let recaptchaWidgetId = null;
-  /** v2 invisible: token arrives in render() callback, not after execute() Promise */
-  let recaptchaTokenResolver = null;
-  function initRecaptchaSlot() {
-    if (recaptchaWidgetId !== null) return;
-    let slot = document.getElementById('recaptcha-root');
-    if (!slot) {
-      slot = document.createElement('div');
-      slot.id = 'recaptcha-root';
-      document.body.appendChild(slot);
-    }
-    const mount = () => {
-      if (!window.grecaptcha || !slot.isConnected) return;
-      grecaptcha.ready(function () {
-        try {
-          const wid = grecaptcha.render(slot, {
-            sitekey: RECAPTCHA_SITEKEY,
-            size: 'invisible',
-            badge: 'bottomright',
-            callback: function (token) {
-              var r = recaptchaTokenResolver;
-              recaptchaTokenResolver = null;
-              if (r) r(token || (grecaptcha.getResponse(wid) || ''));
-            },
-            'error-callback': function () {
-              var r = recaptchaTokenResolver;
-              recaptchaTokenResolver = null;
-              if (r) r('');
-            }
-          });
-          recaptchaWidgetId = wid;
-        } catch (e) { console.error(e); }
-      });
-    };
-    if (window.grecaptcha) mount();
-    else {
-      let n = 0;
-      const t = setInterval(function () {
-        n++;
-        if (window.grecaptcha) { clearInterval(t); mount(); }
-        if (n > 100) clearInterval(t);
-      }, 50);
-    }
-  }
-
+  /** reCAPTCHA v3: script must load with ?render=SITE_KEY; token from execute(siteKey, { action }) */
   function getRecaptchaToken() {
     return new Promise(function (resolve) {
-      initRecaptchaSlot();
-      var settled = false;
-      var failTimer = null;
-      function finish(val) {
-        if (settled) return;
-        settled = true;
-        if (failTimer) clearTimeout(failTimer);
-        resolve(val || '');
-      }
-      function run(elapsed) {
-        if (!window.grecaptcha) return finish('');
-        if (recaptchaWidgetId === null) {
-          if (elapsed > 12000) return finish('');
-          return setTimeout(function () { run(elapsed + 50); }, 50);
+      function run() {
+        if (!window.grecaptcha || typeof grecaptcha.ready !== 'function' || typeof grecaptcha.execute !== 'function') {
+          return false;
         }
-        if (recaptchaTokenResolver) recaptchaTokenResolver('');
-        recaptchaTokenResolver = finish;
-        failTimer = setTimeout(function () {
-          if (recaptchaTokenResolver === finish) {
-            recaptchaTokenResolver = null;
-            finish(grecaptcha.getResponse(recaptchaWidgetId) || '');
-          }
-        }, 25000);
         grecaptcha.ready(function () {
-          try {
-            grecaptcha.reset(recaptchaWidgetId);
-          } catch (e) {}
-          try {
-            grecaptcha.execute(recaptchaWidgetId);
-          } catch (e) {
-            recaptchaTokenResolver = null;
-            finish('');
-          }
+          grecaptcha.execute(RECAPTCHA_SITEKEY, { action: 'jobs_form_submit' })
+            .then(function (token) { resolve(token || ''); })
+            .catch(function (e) { console.error(e); resolve(''); });
         });
+        return true;
       }
-      run(0);
+      if (run()) return;
+      var n = 0;
+      var t = setInterval(function () {
+        n++;
+        if (run()) clearInterval(t);
+        if (n > 150) { clearInterval(t); resolve(''); }
+      }, 50);
     });
   }
 
@@ -2639,7 +2578,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).catch(function (err) {
           console.error(err);
           showErr('Odeslání se nezdařilo. Zkus to prosím znovu.');
-          if (window.grecaptcha && recaptchaWidgetId !== null) grecaptcha.reset(recaptchaWidgetId);
         }).finally(function () {
           if (btn) btn.disabled = false;
         });
@@ -2725,7 +2663,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const inlineHost = document.getElementById('inline-form-host');
   const modalHost = document.getElementById('modal-host');
   if (inlineHost) window.__mountFormV2(inlineHost);
-  initRecaptchaSlot();
 
   // expose for hero
   window.__openModalWithState = function(initial) {
