@@ -634,8 +634,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     pointer-events: none !important;
   }
 </style>
-<!-- v3: ?render= must use the same site key as RECAPTCHA_SITEKEY in the form script -->
-<script src="https://www.google.com/recaptcha/api.js?render=6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv" async defer></script>
 </head>
 <body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6">
 <!-- Google Tag Manager (noscript) -->
@@ -2435,8 +2433,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (() => {
   const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
-  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv'; /* same as ?render= in <head> */
+  const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
   const licenses = ['Ano','Ne'];
+
+  /** v3: load api.js?render=KEY ourselves so it is not blocked by defer/ordering vs body scripts */
+  function ensureRecaptchaScript() {
+    if (window.__recaptchaV3LoadPromise) return window.__recaptchaV3LoadPromise;
+    var src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(RECAPTCHA_SITEKEY);
+    window.__recaptchaV3LoadPromise = new Promise(function (resolve, reject) {
+      var scripts = document.querySelectorAll('script[src*="google.com/recaptcha/api.js"]');
+      var i;
+      var el;
+      for (i = 0; i < scripts.length; i++) {
+        el = scripts[i];
+        if (el.src.indexOf(RECAPTCHA_SITEKEY) !== -1) {
+          if (window.grecaptcha && typeof grecaptcha.execute === 'function') {
+            resolve();
+            return;
+          }
+          el.addEventListener('load', function () { resolve(); });
+          el.addEventListener('error', function () { reject(new Error('recaptcha')); });
+          return;
+        }
+      }
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error('recaptcha')); };
+      document.head.appendChild(s);
+    });
+    return window.__recaptchaV3LoadPromise;
+  }
+  ensureRecaptchaScript().catch(function () {});
   function getMakeWebhookUrl() {
     const fromBody = document.body && document.body.getAttribute('data-make-webhook');
     if (fromBody && fromBody.trim()) return fromBody.trim();
@@ -2458,28 +2487,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
   }
 
-  /** reCAPTCHA v3: script must load with ?render=SITE_KEY; token from execute(siteKey, { action }) */
+  /** reCAPTCHA v3: token from execute; hard timeout so submit never hangs on blocked Google */
   function getRecaptchaToken() {
-    return new Promise(function (resolve) {
-      function run() {
-        if (!window.grecaptcha || typeof grecaptcha.ready !== 'function' || typeof grecaptcha.execute !== 'function') {
-          return false;
-        }
-        grecaptcha.ready(function () {
-          grecaptcha.execute(RECAPTCHA_SITEKEY, { action: 'jobs_form_submit' })
-            .then(function (token) { resolve(token || ''); })
-            .catch(function (e) { console.error(e); resolve(''); });
+    var HARD_MS = 10000;
+    function v3ExecutePromise() {
+      return ensureRecaptchaScript().then(function () {
+        return new Promise(function (resolve) {
+          if (!window.grecaptcha || typeof grecaptcha.ready !== 'function') {
+            return resolve('');
+          }
+          grecaptcha.ready(function () {
+            var p = null;
+            if (typeof grecaptcha.execute === 'function') {
+              try {
+                p = grecaptcha.execute(RECAPTCHA_SITEKEY, { action: 'jobs_form_submit' });
+              } catch (e) {
+                console.error('recaptcha execute', e);
+                return resolve('');
+              }
+            } else if (window.grecaptcha.enterprise && typeof grecaptcha.enterprise.execute === 'function') {
+              try {
+                p = grecaptcha.enterprise.execute(RECAPTCHA_SITEKEY, { action: 'jobs_form_submit' });
+              } catch (e) {
+                console.error('recaptcha enterprise.execute', e);
+                return resolve('');
+              }
+            } else {
+              console.warn('recaptcha: no execute (zkontroluj typ klíče v3 / doménu v adminu)');
+              return resolve('');
+            }
+            Promise.resolve(p)
+              .then(function (token) { resolve(token || ''); })
+              .catch(function (e) { console.error('recaptcha', e); resolve(''); });
+          });
         });
-        return true;
-      }
-      if (run()) return;
-      var n = 0;
-      var t = setInterval(function () {
-        n++;
-        if (run()) clearInterval(t);
-        if (n > 150) { clearInterval(t); resolve(''); }
-      }, 50);
-    });
+      }).catch(function (e) {
+        console.error('recaptcha script', e);
+        return '';
+      });
+    }
+    return Promise.race([
+      v3ExecutePromise(),
+      new Promise(function (resolve) {
+        setTimeout(function () { resolve(''); }, HARD_MS);
+      })
+    ]);
   }
 
   window.__mountFormV2 = function(host, initial) {
@@ -2536,6 +2588,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
 
+        if (btn) btn.disabled = true;
         var fd = new FormData(cf);
         state.name = fd.get('name');
         state.phone = fd.get('phone');
@@ -2547,6 +2600,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         var webhookUrl = getMakeWebhookUrl();
         if (!webhookUrl) {
           showErr('Chybí URL webhooku: doplň atribut data-make-webhook u prvku body nebo window.__MAKE_WEBHOOK_URL.');
+          if (btn) btn.disabled = false;
           return;
         }
 
@@ -2565,7 +2619,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           submittedAt: new Date().toISOString()
         };
 
-        if (btn) btn.disabled = true;
         fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
