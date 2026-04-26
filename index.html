@@ -635,8 +635,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 </style>
 </head>
-<body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6" data-recaptcha-version="v2">
-<!-- reCAPTCHA: v2 = klíč typu „v2 Invisible“ (výchozí, token do Make). Jen čistý v3 klíč v adminu → data-recaptcha-version="v3" -->
+<body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6" data-recaptcha-version="v3">
+<!-- reCAPTCHA v3 (výchozí). Výjimečně starý v2 Invisible klíč → data-recaptcha-version="v2" -->
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMR8VLK3"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -2436,7 +2436,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
   const RECAPTCHA_SITEKEY = '6LedA7wsAAAAAEKqWJGqTLBYriR0H4iRo4BASdrv';
   const licenses = ['Ano','Ne'];
-  const RECAPTCHA_VERSION = String((document.body && document.body.getAttribute('data-recaptcha-version')) || 'v2').toLowerCase().trim();
+  const RECAPTCHA_VERSION = String((document.body && document.body.getAttribute('data-recaptcha-version')) || 'v3').toLowerCase().trim();
 
   /** v3: api.js?render=KEY */
   function ensureRecaptchaV3Script() {
