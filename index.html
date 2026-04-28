@@ -1169,6 +1169,709 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
+<!-- REEL / PARALLAX -->
+<section id="reel" class="relative overflow-hidden section-dark text-white">
+  <style>
+    /* ── reel section ── */
+    #reel { perspective: 1400px; }
+
+    #reel .reel-glow {
+      position: absolute; pointer-events: none;
+      width: 900px; height: 900px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(227,10,26,.20) 0%, transparent 62%);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(.6);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* heading */
+    #reel .reel-eyebrow,
+    #reel .reel-h2 {
+      will-change: transform, opacity;
+    }
+    #reel .reel-h2 .word {
+      display: inline-block;
+      background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,.55) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* columns */
+    #reel .reel-col { display: flex; flex-direction: column; gap: 1.75rem; flex-shrink: 0; }
+    #reel .reel-col-l { padding-top: 5rem; width: 220px; }
+    #reel .reel-col-r { padding-bottom: 5rem; width: 220px; }
+    @media (min-width: 1280px) {
+      #reel .reel-col-l, #reel .reel-col-r { width: 260px; }
+    }
+
+    /* photos: scroll-driven; JS sets transform/opacity on .bob-wrap */
+    #reel .bob-wrap { will-change: transform, opacity; }
+    #reel .photo-card {
+      position: relative;
+      overflow: hidden; border-radius: 1.125rem;
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow: 0 24px 64px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+      transform: rotate(var(--rot,0deg));
+    }
+    #reel .photo-card img { width:100%; height:100%; object-fit:cover; display:block; }
+    #reel .photo-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.45) 100%);
+      pointer-events: none;
+    }
+    #reel .photo-card .cat-chip {
+      position: absolute; left: 10px; bottom: 10px; z-index: 2;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #fff;
+      background: rgba(15,20,30,.65);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      padding: 5px 10px;
+      white-space: nowrap;
+    }
+    #reel .photo-card .cat-chip .cd {
+      width: 5px; height: 5px; border-radius: 999px;
+      background: #E30A1A; display: inline-block;
+      margin-right: 6px; vertical-align: middle;
+      box-shadow: 0 0 8px rgba(227,10,26,.7);
+    }
+
+    /* phone */
+    #reel .phone-wrap {
+      position:relative; width:360px; flex-shrink:0; z-index:10;
+      will-change: transform, opacity;
+    }
+    @media (min-width: 1280px) { #reel .phone-wrap { width: 400px; } }
+    @media (max-width: 1023px) { #reel .phone-wrap { width: 340px; } }
+    @media (max-width: 639px)  { #reel .phone-wrap { width: 280px; } }
+
+    #reel .phone-screen {
+      position: relative;
+      width:100%; aspect-ratio:9/16;
+      border-radius: 2.75rem;
+      overflow:hidden; background:#000;
+      border: 2px solid rgba(255,255,255,.18);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.05),
+        0 40px 100px rgba(0,0,0,.75),
+        0 0 140px rgba(227,10,26,.28);
+    }
+    #reel .phone-screen video { width:100%; height:100%; object-fit:cover; display:block; }
+    #reel .phone-notch {
+      position:absolute; top:12px; left:50%; transform:translateX(-50%);
+      width:76px; height:22px; background:#000; border-radius:999px; z-index:20;
+    }
+    #reel .phone-shine {
+      position:absolute; inset:0; border-radius:2.75rem; pointer-events:none; z-index:15;
+      background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 50%);
+    }
+    #reel .phone-glow {
+      position:absolute; inset:-24px; border-radius:3rem;
+      background: radial-gradient(ellipse at 50% 50%, rgba(227,10,26,.35) 0%, transparent 70%);
+      filter: blur(24px); pointer-events:none; z-index:-1;
+      will-change: opacity;
+    }
+
+    /* ── custom player ── */
+    #reel .player-hit {
+      position: absolute; inset: 0; z-index: 18;
+      cursor: pointer; background: transparent;
+      border: 0; padding: 0;
+    }
+    #reel .player-overlay {
+      position: absolute; inset: 0; z-index: 19;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.55) 100%);
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    /* show overlay while hovering, paused, or just-unmuted */
+    #reel .phone-screen:hover .player-overlay,
+    #reel .phone-screen.is-paused .player-overlay,
+    #reel .phone-screen.show-ui .player-overlay { opacity: 1; }
+
+    #reel .player-play {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%,-50%) scale(.85);
+      width: 76px; height: 76px; border-radius: 999px;
+      background: rgba(255,255,255,.96);
+      color: #0c111d;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,.45), 0 0 0 6px rgba(255,255,255,.08);
+      opacity: 0;
+      transition: opacity .25s ease, transform .25s cubic-bezier(.2,.7,.2,1);
+      pointer-events: none;
+    }
+    #reel .phone-screen:hover .player-play,
+    #reel .phone-screen.is-paused .player-play {
+      opacity: 1; transform: translate(-50%,-50%) scale(1);
+    }
+    /* paused = show "play" icon, playing = show "pause" icon */
+    #reel .player-play .icon-play  { display: block; }
+    #reel .player-play .icon-pause { display: none; }
+    #reel .phone-screen:not(.is-paused) .player-play .icon-play  { display: none; }
+    #reel .phone-screen:not(.is-paused) .player-play .icon-pause { display: block; }
+
+    #reel .player-mute {
+      position: absolute; right: 14px; bottom: 14px; z-index: 22;
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgba(20,20,28,.62);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.16);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease, opacity .25s ease;
+      opacity: 0;
+    }
+    #reel .player-mute:hover { background: rgba(227,10,26,.85); transform: scale(1.06); }
+    #reel .phone-screen:hover .player-mute,
+    #reel .phone-screen.is-paused .player-mute,
+    #reel .phone-screen.show-ui .player-mute { opacity: 1; }
+    #reel .player-mute .icon-on  { display: none; }
+    #reel .player-mute .icon-off { display: block; }
+    #reel .phone-screen.is-unmuted .player-mute .icon-on  { display: block; }
+    #reel .phone-screen.is-unmuted .player-mute .icon-off { display: none; }
+
+    /* progress bar — clickable + draggable */
+    #reel .player-progress {
+      position: absolute; left: 64px; right: 64px; bottom: 18px; z-index: 25;
+      height: 18px; /* big hit area */
+      display: flex; align-items: center;
+      cursor: pointer; touch-action: none;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #reel .player-progress::before {
+      content: '';
+      position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+      height: 3px; border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      transition: height .15s ease;
+    }
+    #reel .phone-screen:hover .player-progress,
+    #reel .phone-screen.is-paused .player-progress,
+    #reel .phone-screen.show-ui .player-progress,
+    #reel .player-progress.is-dragging { opacity: 1; }
+    #reel .player-progress:hover::before,
+    #reel .player-progress.is-dragging::before { height: 5px; }
+    #reel .player-progress-fill {
+      position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, #fff, rgba(255,255,255,.85));
+      border-radius: 999px;
+      pointer-events: none;
+      transition: height .15s ease;
+    }
+    #reel .player-progress:hover .player-progress-fill,
+    #reel .player-progress.is-dragging .player-progress-fill { height: 5px; }
+    #reel .player-progress-knob {
+      position: absolute; top: 50%;
+      width: 14px; height: 14px; border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.45), 0 0 0 4px rgba(255,255,255,.12);
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform .18s cubic-bezier(.2,.7,.2,1);
+      pointer-events: none;
+      left: 0%;
+    }
+    #reel .player-progress:hover .player-progress-knob,
+    #reel .player-progress.is-dragging .player-progress-knob {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* time tooltip while scrubbing */
+    #reel .player-time {
+      position: absolute; bottom: 36px; left: 0;
+      transform: translateX(-50%);
+      font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+      color: #fff;
+      background: rgba(20,20,28,.85);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 6px;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .15s ease;
+      pointer-events: none;
+    }
+    #reel .player-progress.is-dragging .player-time { opacity: 1; }
+
+    /* restart button */
+    #reel .player-restart {
+      position: absolute; left: 14px; bottom: 14px; z-index: 22;
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgba(20,20,28,.62);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.16);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease, opacity .25s ease;
+      opacity: 0;
+    }
+    #reel .player-restart:hover { background: rgba(227,10,26,.85); transform: scale(1.06) rotate(-30deg); }
+    #reel .phone-screen:hover .player-restart,
+    #reel .phone-screen.is-paused .player-restart,
+    #reel .phone-screen.show-ui .player-restart { opacity: 1; }
+
+    /* "tap for sound" hint, shown briefly while still muted */
+    #reel .sound-hint {
+      position: absolute; right: 14px; bottom: 64px; z-index: 22;
+      font-size: 11px; font-weight: 700; letter-spacing: .04em;
+      color: #fff;
+      background: rgba(20,20,28,.62);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      padding: 6px 12px;
+      white-space: nowrap;
+      opacity: 1; transform: none;
+      transition: opacity .35s ease, transform .35s ease;
+      pointer-events: none;
+    }
+
+    /* CTA under phone */
+    #reel .reel-cta { will-change: transform, opacity; }
+    #reel .reel-cta-btn { position: relative; isolation: isolate; z-index: 1; }
+    #reel .reel-cta-btn::before,
+    #reel .reel-cta-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: #E30A1A;
+      z-index: -1;
+      pointer-events: none;
+      animation: reelCtaPulse 2.1s cubic-bezier(.2,.7,.2,1) infinite;
+    }
+    #reel .reel-cta-btn::after { animation-delay: 1.05s; }
+    @keyframes reelCtaPulse {
+      0%        { transform: scale(1);    opacity: .55; }
+      75%, 100% { transform: scale(1.45); opacity: 0; }
+    }
+    #reel .reel-cta-btn:hover::before,
+    #reel .reel-cta-btn:hover::after { animation-play-state: paused; opacity: 0; }
+
+    /* hide hint when unmuted */
+    #reel .phone-screen.is-unmuted .sound-hint { opacity: 0 !important; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #reel .reel-glow, #reel .reel-eyebrow, #reel .reel-h2,
+      #reel .bob-wrap, #reel .phone-wrap, #reel .phone-glow, #reel .reel-cta {
+        opacity: 1 !important; transform: none !important;
+      }
+      #reel .photo-card { transform: rotate(var(--rot,0deg)) !important; }
+      #reel .reel-cta-btn::before, #reel .reel-cta-btn::after { animation: none !important; opacity: 0 !important; }
+    }
+  </style>
+
+  <div class="reel-glow"></div>
+
+  <div class="relative max-w-[1400px] mx-auto px-4 lg:px-16 py-24 md:py-40">
+
+    <!-- heading -->
+    <div class="text-center mb-16 md:mb-24">
+      <p class="reel-eyebrow text-brand text-[11px] font-bold uppercase tracking-[.22em] mb-4">· V&nbsp;akci</p>
+      <h2 class="reel-h2 text-[36px] md:text-[52px] font-extrabold leading-[1.08]">
+        <span class="word">Každý den v&nbsp;terénu.</span><br/>
+        <span class="word" style="opacity:.55">Tohle je naše práce.</span>
+      </h2>
+    </div>
+
+    <!-- scene -->
+    <div class="flex items-center justify-center gap-6 xl:gap-12" id="reel-scene">
+
+      <!-- LEFT column -->
+      <div class="reel-col reel-col-l hidden lg:flex">
+        <div class="bob-wrap" data-ex="-90" data-er="-14" data-rp="-110">
+          <div class="photo-card aspect-[4/3]" style="--rot:-4deg">
+            <img src="photo-fve.jpg" alt="Technici Schlieger instalují fotovoltaické panely" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>FVE</span>
+          </div>
+        </div>
+        <div class="bob-wrap" data-ex="-110" data-er="-9" data-rp="-65">
+          <div class="photo-card aspect-[3/4]" style="--rot:2.5deg">
+            <img src="photo-tc.jpg" alt="Tepelné čerpadlo" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>Tepelná čerpadla</span>
+          </div>
+        </div>
+        <div class="bob-wrap" data-ex="-80" data-er="-11" data-rp="-145">
+          <div class="photo-card aspect-[4/3]" style="--rot:-2deg">
+            <img src="photo-zatepleni.jpg" alt="Zateplení fasády polystyrenem" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>Zateplení</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: phone + video -->
+      <div class="phone-wrap">
+        <div class="phone-glow"></div>
+        <div class="phone-screen is-paused" id="reel-screen">
+          <video id="reel-video" autoplay muted loop playsinline preload="auto" poster="thumbnail.png">
+            <source src="reel.mp4" type="video/mp4"/>
+          </video>
+
+          <button class="player-hit" id="reel-toggle" aria-label="Přehrát / pozastavit"></button>
+
+          <div class="player-overlay"></div>
+
+          <div class="player-progress" id="reel-progress-bar" role="slider" aria-label="Pozice videa" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="player-progress-fill" id="reel-progress"></div>
+            <div class="player-progress-knob" id="reel-knob"></div>
+            <div class="player-time" id="reel-time">0:00</div>
+          </div>
+
+          <div class="player-play" aria-hidden="true">
+            <svg class="icon-play"  width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </div>
+
+          <button class="player-restart" id="reel-restart" aria-label="Přehrát od začátku">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 3-6.7"/>
+              <polyline points="3 4 3 9 8 9"/>
+            </svg>
+          </button>
+
+          <button class="player-mute" id="reel-mute" aria-label="Zapnout / vypnout zvuk">
+            <svg class="icon-off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-1.31-3.17l-1.42 1.42a2.5 2.5 0 0 1 0 3.5l1.42 1.42A4.5 4.5 0 0 0 16.5 12zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.5-1.42.88-2.25 1.1v2.06a8.96 8.96 0 0 0 3.69-1.81L19.73 21 21 19.73 4.27 3z"/></svg>
+            <svg class="icon-on"  width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
+          </button>
+
+          <div class="sound-hint">▶ Klikni pro zvuk</div>
+        </div>
+        <div class="phone-notch"></div>
+        <div class="phone-shine"></div>
+
+        <div class="reel-cta absolute -bottom-24 left-1/2 -translate-x-1/2 whitespace-nowrap">
+          <button data-open-modal class="reel-cta-btn btn-primary rounded-full pl-6 pr-2 py-2 text-[15px] font-semibold inline-flex items-center gap-3 glow-red">
+            Chci se přidat
+            <span class="grid place-items-center w-10 h-10 rounded-full bg-white/15">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT column -->
+      <div class="reel-col reel-col-r hidden lg:flex">
+        <div class="bob-wrap" data-ex="90" data-er="14" data-rp="85">
+          <div class="photo-card aspect-[4/3]" style="--rot:3.5deg">
+            <img src="photo-rekonstrukce.jpg" alt="Kuchyně po rekonstrukci" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>Rekonstrukce</span>
+          </div>
+        </div>
+        <div class="bob-wrap" data-ex="110" data-er="9" data-rp="120">
+          <div class="photo-card aspect-[3/4]" style="--rot:-2.5deg">
+            <img src="photo-energie.jpg" alt="Elektroměr" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>Energie</span>
+          </div>
+        </div>
+        <div class="bob-wrap" data-ex="80" data-er="11" data-rp="65">
+          <div class="photo-card aspect-[4/3]" style="--rot:1.5deg">
+            <img src="photo-servis.jpg" alt="Servisní technik při práci" loading="lazy" decoding="async"/>
+            <span class="cat-chip"><span class="cd"></span>Servis</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var section = document.getElementById('reel');
+      var scene   = document.getElementById('reel-scene');
+      if (!section || !scene) return;
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // collect animated nodes
+      var photos = Array.from(section.querySelectorAll('.bob-wrap')).map(function (el) {
+        return {
+          el: el,
+          ex: parseFloat(el.getAttribute('data-ex')) || 0,
+          er: parseFloat(el.getAttribute('data-er')) || 0,
+          rp: parseFloat(el.getAttribute('data-rp')) || 0
+        };
+      });
+      var phone     = section.querySelector('.phone-wrap');
+      var phoneGlow = section.querySelector('.phone-glow');
+      var glow      = section.querySelector('.reel-glow');
+      var eyebrow   = section.querySelector('.reel-eyebrow');
+      var heading   = section.querySelector('.reel-h2');
+      var cta       = section.querySelector('.reel-cta');
+
+      function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+      function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+      // smoothing for snappier-but-buttery motion
+      var smoothP = 0;
+      var targetP = 0;
+      var driftSmooth = 0;
+      var targetDrift = 0;
+
+      var raf = null;
+      var ticking = false;
+
+      function compute() {
+        var rect = section.getBoundingClientRect();
+        var vh = window.innerHeight || 1;
+        var sectionCenter = rect.top + rect.height / 2;
+        // signed offset of section center from viewport center, normalized
+        var co = (sectionCenter - vh / 2) / vh;
+        // entry progress 0→1 as section center moves from 0.55vh below to 0vh (centered)
+        targetP = clamp(1 - co / 0.55, 0, 1);
+        // drift in vh units once section starts leaving upward
+        targetDrift = Math.max(0, -co);
+      }
+
+      function apply() {
+        var ep = easeOut(smoothP);
+        var dp = driftSmooth;
+
+        // phone
+        if (phone) {
+          var py = (1 - ep) * 110 + dp * -40;
+          var pz = (1 - ep) * -260;
+          var ps = 0.78 + ep * 0.22;
+          phone.style.transform = 'translate3d(0,' + py.toFixed(2) + 'px,' + pz.toFixed(2) + 'px) scale(' + ps.toFixed(3) + ')';
+          phone.style.opacity = ep.toFixed(3);
+        }
+        if (phoneGlow) phoneGlow.style.opacity = (ep * (0.7 + Math.min(dp, 0.4))).toFixed(3);
+
+        // glow
+        if (glow) {
+          var gs = 0.55 + ep * 0.5 + dp * 0.15;
+          glow.style.transform = 'translate(-50%,-50%) scale(' + gs.toFixed(3) + ')';
+          glow.style.opacity = (ep * 0.95).toFixed(3);
+        }
+
+        // heading
+        if (eyebrow) {
+          eyebrow.style.opacity = ep.toFixed(3);
+          eyebrow.style.transform = 'translateY(' + ((1 - ep) * 18).toFixed(2) + 'px)';
+        }
+        if (heading) {
+          heading.style.opacity = ep.toFixed(3);
+          heading.style.transform = 'translateY(' + ((1 - ep) * 36).toFixed(2) + 'px)';
+        }
+        if (cta) {
+          var lp = clamp((smoothP - 0.5) * 2, 0, 1);
+          cta.style.opacity = lp.toFixed(3);
+          cta.style.transform = 'translateX(-50%) translateY(' + ((1 - lp) * 18).toFixed(2) + 'px)';
+        }
+
+        // photos
+        for (var i = 0; i < photos.length; i++) {
+          var p = photos[i];
+          var x = (1 - ep) * p.ex;
+          var y = (1 - ep) * 70 + dp * p.rp;
+          var z = (1 - ep) * -160;
+          var r = (1 - ep) * p.er;
+          p.el.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,' + z.toFixed(2) + 'px) rotate(' + r.toFixed(2) + 'deg)';
+          p.el.style.opacity = ep.toFixed(3);
+        }
+      }
+
+      function frame() {
+        // smooth toward target (lerp)
+        smoothP     += (targetP - smoothP) * 0.18;
+        driftSmooth += (targetDrift - driftSmooth) * 0.18;
+
+        apply();
+
+        // continue animating until close enough to settle
+        if (
+          Math.abs(targetP - smoothP) > 0.001 ||
+          Math.abs(targetDrift - driftSmooth) > 0.001
+        ) {
+          raf = requestAnimationFrame(frame);
+        } else {
+          raf = null;
+          ticking = false;
+        }
+      }
+
+      function tick() {
+        compute();
+        if (!ticking) {
+          ticking = true;
+          if (raf == null) raf = requestAnimationFrame(frame);
+        }
+      }
+
+      if (reduceMotion) {
+        targetP = 1; targetDrift = 0;
+        smoothP = 1; driftSmooth = 0;
+        apply();
+      } else {
+        // initialize at current scroll position
+        compute();
+        smoothP = targetP; driftSmooth = targetDrift;
+        apply();
+
+        window.addEventListener('scroll', tick, { passive: true });
+        window.addEventListener('resize', tick, { passive: true });
+      }
+
+      // ── custom player ──
+      var screen      = document.getElementById('reel-screen');
+      var video       = document.getElementById('reel-video');
+      var toggle      = document.getElementById('reel-toggle');
+      var muteBtn     = document.getElementById('reel-mute');
+      var restartBtn  = document.getElementById('reel-restart');
+      var progressBar = document.getElementById('reel-progress-bar');
+      var progressFill= document.getElementById('reel-progress');
+      var knob        = document.getElementById('reel-knob');
+      var timeLabel   = document.getElementById('reel-time');
+      if (!video || !screen) return;
+
+      function syncPlayState() {
+        if (video.paused) screen.classList.add('is-paused');
+        else screen.classList.remove('is-paused');
+      }
+      function syncMuteState() {
+        if (video.muted) screen.classList.remove('is-unmuted');
+        else screen.classList.add('is-unmuted');
+      }
+
+      function fmtTime(t) {
+        if (!isFinite(t) || t < 0) t = 0;
+        var m = Math.floor(t / 60);
+        var s = Math.floor(t % 60);
+        return m + ':' + (s < 10 ? '0' + s : s);
+      }
+      function setProgressVisual(ratio) {
+        var pct = Math.max(0, Math.min(1, ratio)) * 100;
+        progressFill.style.width = pct.toFixed(2) + '%';
+        knob.style.left = pct.toFixed(2) + '%';
+        timeLabel.style.left = pct.toFixed(2) + '%';
+        progressBar.setAttribute('aria-valuenow', pct.toFixed(0));
+      }
+
+      // tap anywhere on screen → play/pause (but not on controls)
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (video.paused) video.play().catch(function(){});
+        else video.pause();
+        video.dataset.userPaused = video.paused ? '1' : '0';
+      });
+
+      // mute button
+      muteBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        if (!video.muted) {
+          video.volume = 1;
+          if (video.paused) video.play().catch(function(){});
+          screen.classList.add('show-ui');
+          setTimeout(function(){ screen.classList.remove('show-ui'); }, 1200);
+        }
+        syncMuteState();
+      });
+
+      // restart button → seek to 0 and play
+      restartBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        video.currentTime = 0;
+        video.play().catch(function(){});
+        video.dataset.userPaused = '0';
+        screen.classList.add('show-ui');
+        setTimeout(function(){ screen.classList.remove('show-ui'); }, 800);
+      });
+
+      video.addEventListener('play',         syncPlayState);
+      video.addEventListener('pause',        syncPlayState);
+      video.addEventListener('volumechange', syncMuteState);
+      video.addEventListener('timeupdate', function () {
+        if (!video.duration || dragging) return;
+        setProgressVisual(video.currentTime / video.duration);
+        timeLabel.textContent = fmtTime(video.currentTime);
+      });
+      video.addEventListener('loadedmetadata', function () {
+        timeLabel.textContent = fmtTime(0);
+      });
+
+      // ── scrubbing (click + drag) ──
+      var dragging = false;
+      var wasPlaying = false;
+
+      function ratioFromEvent(ev) {
+        var rect = progressBar.getBoundingClientRect();
+        var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
+        return Math.max(0, Math.min(1, x / rect.width));
+      }
+
+      function seekTo(ratio) {
+        if (!video.duration) return;
+        var t = ratio * video.duration;
+        video.currentTime = t;
+        setProgressVisual(ratio);
+        timeLabel.textContent = fmtTime(t);
+      }
+
+      function onDown(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        dragging = true;
+        wasPlaying = !video.paused;
+        progressBar.classList.add('is-dragging');
+        if (wasPlaying) video.pause();
+        seekTo(ratioFromEvent(ev));
+
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup',   onUp);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend',  onUp);
+        window.addEventListener('touchcancel', onUp);
+      }
+      function onMove(ev) {
+        if (!dragging) return;
+        ev.preventDefault();
+        seekTo(ratioFromEvent(ev));
+      }
+      function onUp() {
+        if (!dragging) return;
+        dragging = false;
+        progressBar.classList.remove('is-dragging');
+        if (wasPlaying) video.play().catch(function(){});
+
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup',   onUp);
+        window.removeEventListener('touchmove', onMove);
+        window.removeEventListener('touchend',  onUp);
+        window.removeEventListener('touchcancel', onUp);
+      }
+
+      progressBar.addEventListener('mousedown',  onDown);
+      progressBar.addEventListener('touchstart', onDown, { passive: false });
+
+      // pause when section is far off-screen, resume when back
+      var playObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            if (video.paused && video.dataset.userPaused !== '1') video.play().catch(function(){});
+          } else {
+            if (!video.paused) {
+              video.dataset.userPaused = '0';
+              video.pause();
+            }
+          }
+        });
+      }, { threshold: 0.05 });
+      playObserver.observe(screen);
+
+      syncPlayState();
+      syncMuteState();
+    })();
+  </script>
+</section>
+
 <!-- STABILITA / MAPA -->
 <section class="relative overflow-hidden bg-paper border-t border-line">
   <div class="relative max-w-[1360px] mx-auto px-4 lg:px-16 py-24 md:py-32">
