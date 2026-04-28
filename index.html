@@ -199,7 +199,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .hero-photo {
     position: absolute; inset: 0;
-    background-image: url('hero-bg.png');
+    background-image: url('hero-bg.png?v=2');
     background-size: cover;
     background-position: right center;
     background-repeat: no-repeat;
@@ -208,9 +208,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   @supports (background-image: image-set(url('x') 1x)) {
     .hero-photo {
       background-image: image-set(
-        url('media/hero-bg.avif') type('image/avif'),
-        url('media/hero-bg.webp') type('image/webp'),
-        url('hero-bg.png') type('image/png')
+        url('media/hero-bg.avif?v=2') type('image/avif'),
+        url('media/hero-bg.webp?v=2') type('image/webp'),
+        url('hero-bg.png?v=2') type('image/png')
       );
     }
   }
