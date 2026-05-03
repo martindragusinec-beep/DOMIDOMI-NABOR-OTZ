@@ -621,18 +621,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 <body class="antialiased"
   data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6"
-  data-lead-source="ACQ-LP-INS-SL_100K_526"
-  data-lead-company="Čiperka stavby"
+  data-lead-source="LP-DomiDomi-0426"
+  data-lead-company="DomiDomi"
   data-lead-country="CZ"
-  data-customer-type="B2C"
-  data-lead-products='["WALL_INSULATION"]'>
+  data-customer-type="Hiring">
 <!-- reCAPTCHA v3: web posílá jen token + název akce; secret a práh skóre 0–1 jen v Make (siteverify). Diagnostika: ?debug=1 -->
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMR8VLK3"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <!-- Náborový formulář: vlož do data-make-webhook URL z Make.com (modul Webhooks > Custom webhook), např. data-make-webhook="https://hook.eu2.make.com/..." -->
-<!-- Volitelné lead meta pro Make: data-lead-source, data-lead-company, data-lead-country, data-customer-type, data-lead-products='["…"]' (JSON) -->
+<!-- Volitelné lead meta: data-lead-source, data-lead-company, data-lead-country, data-customer-type, data-lead-products (JSON pole; prázdné / chybí → leadProducts: null v payloadu) -->
 <!-- URL query (urlQueryString) se do webhooku přidá jen když ad_storage=granted (Consent Mode / dataLayer / viz isAdStorageGranted v JS). -->
 <!-- Top scroll progress -->
 <div id="scroll-progress" class="fixed top-0 left-0 z-[60] w-full h-[3px] bg-transparent">
@@ -3301,12 +3300,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (d.leadCompany) out.leadCompany = d.leadCompany;
     if (d.leadCountry) out.leadCountry = d.leadCountry;
     if (d.customerType) out.customerType = String(d.customerType).trim();
-    if (d.leadProducts) {
+    var lpRaw = d.leadProducts != null ? String(d.leadProducts).trim() : '';
+    if (lpRaw && lpRaw !== 'null') {
       try {
-        out.leadProducts = JSON.parse(d.leadProducts);
+        out.leadProducts = JSON.parse(lpRaw);
       } catch (e) {
-        out.leadProducts = d.leadProducts;
+        out.leadProducts = lpRaw;
       }
+    } else {
+      out.leadProducts = null;
     }
     return out;
   }
