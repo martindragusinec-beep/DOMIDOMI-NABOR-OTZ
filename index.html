@@ -619,13 +619,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 </style>
 </head>
-<body class="antialiased" data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6">
+<body class="antialiased"
+  data-make-webhook="https://hook.eu1.make.com/l5t9g2zh9a1emivilr30m041cgn0t4o6"
+  data-lead-source="ACQ-LP-INS-SL_100K_526"
+  data-lead-company="Čiperka stavby"
+  data-lead-country="CZ"
+  data-customer-type="B2C"
+  data-lead-products='["WALL_INSULATION"]'>
 <!-- reCAPTCHA v3: web posílá jen token + název akce; secret a práh skóre 0–1 jen v Make (siteverify). Diagnostika: ?debug=1 -->
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMR8VLK3"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <!-- Náborový formulář: vlož do data-make-webhook URL z Make.com (modul Webhooks > Custom webhook), např. data-make-webhook="https://hook.eu2.make.com/..." -->
+<!-- Volitelné lead meta pro Make: data-lead-source, data-lead-company, data-lead-country, data-customer-type, data-lead-products='["…"]' (JSON) -->
+<!-- URL query (urlQueryString) se do webhooku přidá jen když ad_storage=granted (Consent Mode / dataLayer / viz isAdStorageGranted v JS). -->
 <!-- Top scroll progress -->
 <div id="scroll-progress" class="fixed top-0 left-0 z-[60] w-full h-[3px] bg-transparent">
   <div class="progressbar w-full" style="transform: scaleX(0)"></div>
@@ -3269,6 +3277,75 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return '';
   }
 
+  /** Všechna pole z FormData jako objekt (více stejných klíčů → pole). */
+  function formDataToObject(fd) {
+    const o = {};
+    fd.forEach(function (v, k) {
+      if (Object.prototype.hasOwnProperty.call(o, k)) {
+        if (!Array.isArray(o[k])) o[k] = [o[k]];
+        o[k].push(v);
+      } else {
+        o[k] = v;
+      }
+    });
+    return o;
+  }
+
+  /** Volitelné data-lead-* na body → plochý objekt pro Make. */
+  function getLeadMetaFromBody() {
+    const b = document.body;
+    if (!b || !b.dataset) return {};
+    const d = b.dataset;
+    const out = {};
+    if (d.leadSource) out.leadSource = d.leadSource;
+    if (d.leadCompany) out.leadCompany = d.leadCompany;
+    if (d.leadCountry) out.leadCountry = d.leadCountry;
+    if (d.customerType) out.customerType = String(d.customerType).trim();
+    if (d.leadProducts) {
+      try {
+        out.leadProducts = JSON.parse(d.leadProducts);
+      } catch (e) {
+        out.leadProducts = d.leadProducts;
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Google Consent Mode: ad_storage = granted?
+   * – dataLayer položky s ad_storage / consent update
+   * – Cookiebot: consent.marketing (typické mapování na reklamu)
+   * – window.__AD_STORAGE_GRANTED__ === true (test / vlastní CMP hook)
+   */
+  function isAdStorageGranted() {
+    try {
+      if (window.__AD_STORAGE_GRANTED__ === true) return true;
+      var dl = window.dataLayer;
+      if (dl && dl.length) {
+        var granted = false;
+        var seen = false;
+        for (var i = 0; i < dl.length; i++) {
+          var e = dl[i];
+          if (!e || typeof e !== 'object') continue;
+          if (e.ad_storage === 'granted') { granted = true; seen = true; }
+          if (e.ad_storage === 'denied') { granted = false; seen = true; }
+          if (e.event === 'consent_update') {
+            if (e.ad_storage === 'granted') { granted = true; seen = true; }
+            if (e.ad_storage === 'denied') { granted = false; seen = true; }
+          }
+          if (Array.isArray(e) && e[0] === 'consent' && e[1] === 'update' && e[2] && typeof e[2] === 'object') {
+            if (e[2].ad_storage === 'granted') { granted = true; seen = true; }
+            if (e[2].ad_storage === 'denied') { granted = false; seen = true; }
+          }
+        }
+        if (seen) return granted;
+      }
+      var cb = window.Cookiebot;
+      if (cb && cb.consent && cb.consent.marketing === true) return true;
+    } catch (err) {}
+    return false;
+  }
+
   function computeSpamFlag(cf) {
     const hp = String((cf.querySelector('input[name="company_website"]') || {}).value || '').trim();
     const mountedAt = Number(cf.dataset.mountedAt || 0);
@@ -3364,7 +3441,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           setTimeout(() => { if (state.step < total - 1) { state.step++; render(); } }, 240);
         });
       });
-      const cf = body.querySelector('#contact-form');
+      const cf = body.querySelector('.js-jobs-form');
       if (cf) {
         cf.dataset.mountedAt = String(Date.now());
         cf.addEventListener('submit', async function (e) {
@@ -3392,8 +3469,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           return;
         }
 
-        var payload = {
+        var adOk = isAdStorageGranted();
+        var ts = new Date().toISOString();
+        var payload = Object.assign({
           source: host.id === 'modal-host' ? 'modal' : 'inline',
+          formId: cf.id || null,
+          formName: cf.getAttribute('name') || null,
+          formSlug: cf.getAttribute('data-form-slug') || null,
+          pageURL: (typeof location !== 'undefined' ? location.href : '') || null,
+          referrer: (typeof document !== 'undefined' ? (document.referrer || '') : '') || null,
+          timestamp: ts,
+          urlQueryString: adOk ? ((typeof location !== 'undefined' && location.search) ? location.search : '') : null,
+          urlParamsIncluded: adOk,
+          adStorageGranted: adOk,
+          formFields: formDataToObject(fd),
           name: state.name,
           phone: state.phone,
           email: state.email,
@@ -3405,8 +3494,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           spamFlag: spamCheck.spamFlag ? 1 : 0,
           spamReasons: spamCheck.spamReasons.join(','),
           formFillMs: spamCheck.elapsedMs,
-          submittedAt: new Date().toISOString()
-        };
+          submittedAt: ts
+        }, getLeadMetaFromBody());
         try {
           if (typeof location !== 'undefined' && location.search && location.search.indexOf('debug=1') !== -1) {
             var rtl = recaptchaToken ? recaptchaToken.length : 0;
@@ -3449,8 +3538,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     function renderContact() {
+      const fid = 'jobs-form-' + (host.id || 'host');
       return `
-        <form id="contact-form" class="grid gap-3">
+        <form id="${fid}" name="domidomi_nabor" data-form-slug="jobs-landing" class="js-jobs-form grid gap-3">
           <label class="grid gap-1.5">
             <span class="text-[12px] font-semibold text-slate2-600">Jméno a příjmení</span>
             <input name="name" required class="px-4 py-3 rounded-xl border border-line focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Jan Novák"/>
@@ -3466,7 +3556,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </label>
           </div>
           <label class="flex items-start gap-3 mt-1 text-[13px] text-slate2-600">
-            <input type="checkbox" required class="mt-1 accent-[#E30A1A]"/>
+            <input type="checkbox" name="privacyConsent" value="yes" required class="mt-1 accent-[#E30A1A]"/>
             <span>Souhlasím se zpracováním údajů za účelem náboru a se <a href="https://domidomi.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-slate2-900">zásadami ochrany osobních údajů</a>.</span>
           </label>
           <p class="text-[11px] leading-relaxed text-slate2-500">
