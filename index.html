@@ -2959,7 +2959,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
   // ------ form logic ------
-  const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy (HK / PCE) + Vysočina'];
+  const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy + Vysočina'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
 
   function mountForm(host, variant) {
@@ -3126,7 +3126,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 // Proper mountForm (replaces stub) ----------------
 (() => {
-  const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy (HK / PCE) + Vysočina'];
+  const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy + Vysočina'];
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
   const RECAPTCHA_SITEKEY = '6LckKsssAAAAAENv5lEf09_gsjW1gD5gEoD2fo5w';
   const licenses = ['Ano','Ne'];
@@ -3620,7 +3620,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Hero step-1 options — click advances to step 2 with selected region
   const heroHost = document.getElementById('hero-quiz-options');
   if (heroHost) {
-    const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy (HK / PCE) + Vysočina'];
+    const regions = ['Praha + Střední Čechy','Jižní Čechy + Plzeňsko','Morava (Brno/Olomouc)','Ostravsko + Slezsko','Vysočina + Pardubicko','Ústecko + Liberecko','Východní Čechy + Vysočina'];
     heroHost.innerHTML = regions.map(r => `
       <button data-hero-opt data-val="${r}" class="radio-row text-left">
         <span class="circle"></span>
