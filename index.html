@@ -3014,6 +3014,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="mt-6 rounded-2xl bg-slate-50 border border-line p-4 text-left text-sm max-w-[400px] mx-auto">
             <div class="flex justify-between py-1.5"><span class="text-slate2-500">Trh</span><span class="font-semibold">${state.region || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Zkušenost</span><span class="font-semibold">${state.exp || '—'}</span></div>
+            <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Produkt</span><span class="font-semibold">${state.product || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Řidičák</span><span class="font-semibold">${state.license || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Kontakt</span><span class="font-semibold">${state.phone || state.email || '—'}</span></div>
           </div>
@@ -3130,6 +3131,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const experience = ['0 – méně než rok','1 – 2 roky','3 – 5 let','5+ let'];
   const RECAPTCHA_SITEKEY = '6LckKsssAAAAAENv5lEf09_gsjW1gD5gEoD2fo5w';
   const licenses = ['Ano','Ne'];
+  const products = ['Fotovoltaika + Tepelná čerpadla','Rekonstrukce bytů a domů','Zateplení, okna, dveře'];
   const RECAPTCHA_ACTION = 'jobs_form_submit';
 
   function rcHasExecute() {
@@ -3402,9 +3404,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   window.__mountFormV2 = function(host, initial) {
-    const state = Object.assign({ step: 0, region: null, exp: null, license: null, name: '', phone: '', email: '' }, initial || {});
-    const total = 4;
-    const stepTitles = ['Ve kterém regionu chceš působit?','Máš zkušenosti s obchodem?','Máš řidičák?','Kam ti máme volat?'];
+    const state = Object.assign({ step: 0, region: null, exp: null, product: null, license: null, name: '', phone: '', email: '' }, initial || {});
+    const total = 5;
+    const stepTitles = ['Ve kterém regionu chceš působit?','Máš zkušenosti s obchodem?','Na jaký produkt se chceš nejvíce zaměřit?','Máš řidičák?','Kam ti máme volat?'];
 
     function render() {
       const pct = (state.step / total) * 100;
@@ -3427,8 +3429,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const body = host.querySelector('#step-body');
       if (state.step === 0) body.innerHTML = renderOpts(regions, state.region);
       if (state.step === 1) body.innerHTML = renderOpts(experience, state.exp);
-      if (state.step === 2) body.innerHTML = renderOpts(licenses, state.license);
-      if (state.step === 3) body.innerHTML = renderContact();
+      if (state.step === 2) body.innerHTML = renderOpts(products, state.product);
+      if (state.step === 3) body.innerHTML = renderOpts(licenses, state.license);
+      if (state.step === 4) body.innerHTML = renderContact();
 
       host.querySelector('#prev').addEventListener('click', () => { if (state.step>0) { state.step--; render(); } });
 
@@ -3437,7 +3440,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const val = btn.dataset.val;
           if (state.step === 0) state.region = val;
           else if (state.step === 1) state.exp = val;
-          else if (state.step === 2) state.license = val;
+          else if (state.step === 2) state.product = val;
+          else if (state.step === 3) state.license = val;
           body.querySelectorAll('[data-opt]').forEach(b => b.classList.remove('on'));
           btn.classList.add('on');
           setTimeout(() => { if (state.step < total - 1) { state.step++; render(); } }, 240);
@@ -3490,6 +3494,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           email: state.email,
           region: state.region,
           experience: state.exp,
+          product: state.product,
           license: state.license,
           recaptchaToken: recaptchaToken,
           recaptchaAction: RECAPTCHA_ACTION,
@@ -3591,6 +3596,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="mt-6 rounded-2xl bg-slate-50 border border-line p-4 text-left text-sm max-w-[400px] mx-auto">
             <div class="flex justify-between py-1.5"><span class="text-slate2-500">Trh</span><span class="font-semibold">${state.region || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Zkušenost</span><span class="font-semibold">${state.exp || '—'}</span></div>
+            <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Produkt</span><span class="font-semibold">${state.product || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Řidičák</span><span class="font-semibold">${state.license || '—'}</span></div>
             <div class="flex justify-between py-1.5 border-t border-line"><span class="text-slate2-500">Kontakt</span><span class="font-semibold">${state.phone || state.email || '—'}</span></div>
           </div>
